@@ -1,0 +1,139 @@
+{
+  "students": [
+    {
+      "id": "1",
+      "name": "Student Name",
+      "studentId": "1002",
+      "course": "Advanced Balayage Artistry",
+      "address": "Kathmandu",
+      "mobile": "9801234567",
+      "email": "student1@gmail.com",
+      "startDate": "2026-05-10",
+      "duration": "45",
+      "nationalId": "Xxxxxxxxx1",
+      "status": "COMPLETE",
+      "balance": 0
+    },
+    {
+      "id": "2",
+      "name": "Another Student",
+      "studentId": "1003",
+      "course": "Lamination Brow Architecture",
+      "address": "Pokhara",
+      "mobile": "9802345678",
+      "email": "student2@gmail.com",
+      "startDate": "2026-06-01",
+      "duration": "30",
+      "nationalId": "Xxxxxxxxx2",
+      "status": "ACTIVE",
+      "balance": 2000
+    }
+  ],
+  "clients": [
+    {
+      "id": "1",
+      "firstName": "Sarah",
+      "lastName": "Johnson",
+      "nationalId": "ABC123456789",
+      "phone": "9801234567",
+      "email": "sarah.johnson@gmail.com",
+      "skin": "Combination",
+      "registeredDate": "2026-01-15"
+    },
+    {
+      "id": "2",
+      "firstName": "Emma",
+      "lastName": "Smith",
+      "nationalId": "XYZ987654321",
+      "phone": "9802345678",
+      "email": "emma.smith@gmail.com",
+      "skin": "Dry",
+      "registeredDate": "2026-02-20"
+    }
+  ],
+  "staff": [
+    {
+      "id": "1",
+      "firstName": "John",
+      "lastName": "Doe",
+      "position": "Senior Therapist",
+      "department": "Beauty Services",
+      "phone": "9801234567",
+      "email": "john.doe@wellness.com",
+      "joinDate": "2025-06-01",
+      "salary": 50000,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "2",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "position": "Instructor",
+      "department": "Academy",
+      "phone": "9802345678",
+      "email": "jane.smith@wellness.com",
+      "joinDate": "2025-07-15",
+      "salary": 45000,
+      "status": "ACTIVE"
+    }
+  ],
+  "courses": [
+    {
+      "id": "1",
+      "name": "Advanced Balayage Artistry",
+      "description": "Professional hair coloring techniques",
+      "duration": "45",
+      "price": 15000,
+      "instructor": "Maria Garcia",
+      "level": "Advanced",
+      "students": 12,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "2",
+      "name": "Lamination Brow Architecture",
+      "description": "Modern eyebrow design and lamination",
+      "duration": "30",
+      "price": 10000,
+      "instructor": "Lisa Wong",
+      "level": "Intermediate",
+      "students": 8,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "3",
+      "name": "Skin Analysis & Consultation",
+      "description": "Professional skin assessment techniques",
+      "duration": "20",
+      "price": 8000,
+      "instructor": "Dr. Sharma",
+      "level": "Beginner",
+      "students": 15,
+      "status": "ACTIVE"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "1",
+      "customerName": "Sarah Johnson",
+      "customerId": "1",
+      "service": "Hair Cutting",
+      "date": "2026-06-05",
+      "time": "10:00 AM",
+      "therapist": "John Doe",
+      "status": "CONFIRMED",
+      "notes": "Regular maintenance"
+    },
+    {
+      "id": "2",
+      "customerName": "Emma Smith",
+      "customerId": "2",
+      "service": "Facial Treatment",
+      "date": "2026-06-06",
+      "time": "02:00 PM",
+      "therapist": "Jane Smith",
+      "status": "PENDING",
+      "notes": "First time customer"
+    }
+  ]
+}
