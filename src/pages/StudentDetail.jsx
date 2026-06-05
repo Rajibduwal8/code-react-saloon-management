@@ -1,11 +1,12 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Edit, Trash2Icon } from "lucide-react";
 import { getStudentById, deleteStudent } from "../services/studentService";
 
-export default function StudentDetail() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function StudentDetail({ id }) {
+  const router = useRouter();
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +28,7 @@ export default function StudentDetail() {
     if (window.confirm("Are you sure you want to delete this student?")) {
       try {
         await deleteStudent(id);
-        navigate("/students");
+        router.push("/students");
       } catch (error) {
         console.error("Error deleting student:", error);
       }
@@ -47,7 +48,7 @@ export default function StudentDetail() {
       <div style={{ padding: "40px 28px" }}>
         <button
           className="btn-outline"
-          onClick={() => navigate("/students")}
+          onClick={() => router.push("/students")}
           style={{ marginBottom: 20 }}
         >
           <ArrowLeft size={13} /> Back to Students
@@ -70,7 +71,10 @@ export default function StudentDetail() {
             marginBottom: 20,
           }}
         >
-          <button className="btn-outline" onClick={() => navigate("/students")}>
+          <button
+            className="btn-outline"
+            onClick={() => router.push("/students")}
+          >
             <ArrowLeft size={13} /> Back
           </button>
           <div>

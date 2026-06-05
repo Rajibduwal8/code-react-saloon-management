@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import Link from "next/link";
 import {
   LayoutDashboard,
   Calendar,
@@ -90,14 +93,14 @@ export default function Sidebar({
             {group.items.map((item) => {
               const Icon = item.icon;
               return (
-                <div
+                <Link
                   key={item.path}
+                  href={item.path}
                   className={`sidebar-item ${activePage === item.path ? "active" : ""}`}
-                  onClick={() => setActivePage(item.path)}
                 >
                   <Icon size={15} />
                   <span>{item.label}</span>
-                </div>
+                </Link>
               );
             })}
           </div>

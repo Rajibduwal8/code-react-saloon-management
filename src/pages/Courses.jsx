@@ -1,5 +1,9 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+// Navigation handled by Next.js wrapper
+// import { useNavigate } from "react-router-dom";
 import { Search, Plus, X } from "lucide-react";
 import {
   getCourses,
@@ -20,7 +24,7 @@ const LEVEL_OPTIONS = [
 ];
 
 export default function Courses() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -390,14 +394,14 @@ export default function Courses() {
                     <button
                       type="button"
                       className="btn-outline"
-                      onClick={() => navigate(`/courses/${c.id}`)}
+                      onClick={() => router.push(`/courses/${c.id}`)}
                     >
                       View
                     </button>
                     <button
                       type="button"
                       className="btn-cancel"
-                      onClick={() => navigate(`/courses/${c.id}/edit`)}
+                      onClick={() => router.push(`/courses/${c.id}/edit`)}
                     >
                       Edit
                     </button>

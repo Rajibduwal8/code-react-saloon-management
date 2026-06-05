@@ -1,12 +1,16 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+// Navigation handled by Next.js wrapper
+// import { useNavigate } from "react-router-dom";
 import { EditIcon, Eye, Plus, Trash2Icon } from "lucide-react";
 import Pagination from "../components/ui/Pagination";
 import StaffModal from "../components/modals/StaffModal";
 import { getStaff, deleteStaff } from "../services/staffService";
 
 export default function Staff() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -170,7 +174,7 @@ export default function Staff() {
                     <td>
                       <div style={{ display: "flex", gap: 8 }}>
                         <button
-                          onClick={() => navigate(`/staff/${member.id}`)}
+                          onClick={() => router.push(`/staff/${member.id}`)}
                           style={{
                             background: "none",
                             border: "none",
@@ -183,7 +187,9 @@ export default function Staff() {
                           <Eye size={13} />
                         </button>
                         <button
-                          onClick={() => navigate(`/staff/${member.id}/edit`)}
+                          onClick={() =>
+                            router.push(`/staff/${member.id}/edit`)
+                          }
                           style={{
                             background: "none",
                             border: "none",

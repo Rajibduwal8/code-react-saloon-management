@@ -1,12 +1,13 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import AddCustomerModal from "../components/modals/AddCustomerModal";
 import { getClientById } from "../services/clientService";
 
-export default function ClientEdit() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function ClientEdit({ id }) {
+  const router = useRouter();
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,7 +46,7 @@ export default function ClientEdit() {
         >
           <button
             className="btn-outline"
-            onClick={() => navigate(`/clients/${id}`)}
+            onClick={() => router.push(`/clients/${id}`)}
           >
             <ArrowLeft size={13} /> Back
           </button>
@@ -59,8 +60,8 @@ export default function ClientEdit() {
       {client && (
         <AddCustomerModal
           clientData={client}
-          onClose={() => navigate(`/clients/${id}`)}
-          onSuccess={() => navigate(`/clients/${id}`)}
+          onClose={() => router.push(`/clients/${id}`)}
+          onSuccess={() => router.push(`/clients/${id}`)}
         />
       )}
     </div>

@@ -1,5 +1,9 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+// Navigation handled by Next.js wrapper
+// import { useNavigate } from "react-router-dom";
 import {
   Calendar,
   EditIcon,
@@ -17,7 +21,7 @@ import {
 } from "../services/appointmentService";
 
 export default function Appointments() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showBooking, setShowBooking] = useState(false);
@@ -216,7 +220,7 @@ export default function Appointments() {
                         <div style={{ display: "flex", gap: 8 }}>
                           <button
                             onClick={() =>
-                              navigate(`/appointments/${appointment.id}`)
+                              router.push(`/appointments/${appointment.id}`)
                             }
                             style={{
                               background: "none",
@@ -230,7 +234,9 @@ export default function Appointments() {
                           </button>
                           <button
                             onClick={() =>
-                              navigate(`/appointments/${appointment.id}/edit`)
+                              router.push(
+                                `/appointments/${appointment.id}/edit`,
+                              )
                             }
                             style={{
                               background: "none",

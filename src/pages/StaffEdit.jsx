@@ -1,12 +1,13 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import StaffModal from "../components/modals/StaffModal";
 import { getStaffById } from "../services/staffService";
 
-export default function StaffEdit() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function StaffEdit({ id }) {
+  const router = useRouter();
   const [staff, setStaff] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,7 +46,7 @@ export default function StaffEdit() {
         >
           <button
             className="btn-outline"
-            onClick={() => navigate(`/staff/${id}`)}
+            onClick={() => router.push(`/staff/${id}`)}
           >
             <ArrowLeft size={13} /> Back
           </button>
@@ -59,8 +60,8 @@ export default function StaffEdit() {
       {staff && (
         <StaffModal
           staffData={staff}
-          onClose={() => navigate(`/staff/${id}`)}
-          onSuccess={() => navigate(`/staff/${id}`)}
+          onClose={() => router.push(`/staff/${id}`)}
+          onSuccess={() => router.push(`/staff/${id}`)}
         />
       )}
     </div>

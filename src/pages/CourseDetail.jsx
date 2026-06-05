@@ -1,11 +1,12 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Edit, Trash2Icon } from "lucide-react";
 import { getCourseById, deleteCourse } from "../services/courseService";
 
-export default function CourseDetail() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function CourseDetail({ id }) {
+  const router = useRouter();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +28,7 @@ export default function CourseDetail() {
     if (window.confirm("Delete this course?")) {
       try {
         await deleteCourse(id);
-        navigate("/courses");
+        router.push("/courses");
       } catch (error) {
         console.error("Error deleting course:", error);
       }
@@ -47,7 +48,7 @@ export default function CourseDetail() {
       <div style={{ padding: "40px 28px" }}>
         <button
           className="btn-outline"
-          onClick={() => navigate("/courses")}
+          onClick={() => router.push("/courses")}
           style={{ marginBottom: 20 }}
         >
           <ArrowLeft size={13} /> Back to Courses
@@ -74,7 +75,7 @@ export default function CourseDetail() {
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <button
               className="btn-outline"
-              onClick={() => navigate("/courses")}
+              onClick={() => router.push("/courses")}
             >
               <ArrowLeft size={13} /> Back
             </button>
@@ -88,7 +89,7 @@ export default function CourseDetail() {
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button
               className="btn-outline"
-              onClick={() => navigate(`/courses/${id}/edit`)}
+              onClick={() => router.push(`/courses/${id}/edit`)}
             >
               <Edit size={14} /> Edit
             </button>

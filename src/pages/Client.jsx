@@ -1,12 +1,16 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+// Navigation handled by Next.js wrapper
+// import { useNavigate } from "react-router-dom";
 import { EditIcon, Eye, Plus, Trash2Icon } from "lucide-react";
 import Pagination from "../components/ui/Pagination";
 import AddCustomerModal from "../components/modals/AddCustomerModal";
 import { getClients, deleteClient } from "../services/clientService";
 
 export default function Client() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -159,7 +163,7 @@ export default function Client() {
                     <td>
                       <div style={{ display: "flex", gap: 8 }}>
                         <button
-                          onClick={() => navigate(`/clients/${client.id}`)}
+                          onClick={() => router.push(`/clients/${client.id}`)}
                           style={{
                             background: "none",
                             border: "none",
@@ -172,7 +176,9 @@ export default function Client() {
                           <Eye size={13} />
                         </button>
                         <button
-                          onClick={() => navigate(`/clients/${client.id}/edit`)}
+                          onClick={() =>
+                            router.push(`/clients/${client.id}/edit`)
+                          }
                           style={{
                             background: "none",
                             border: "none",

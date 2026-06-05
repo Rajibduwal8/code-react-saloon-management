@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import {
   getAppointmentById,
@@ -8,9 +10,8 @@ import {
 
 const STATUS_OPTIONS = ["CONFIRMED", "PENDING", "CANCELLED", "COMPLETED"];
 
-export default function AppointmentEdit() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function AppointmentEdit({ id }) {
+  const router = useRouter();
   const [appointment, setAppointment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({});
@@ -46,7 +47,7 @@ export default function AppointmentEdit() {
     event.preventDefault();
     try {
       await updateAppointment(id, form);
-      navigate(`/appointments/${id}`);
+      router.push(`/appointments/${id}`);
     } catch (error) {
       console.error("Error updating appointment:", error);
     }
@@ -73,7 +74,7 @@ export default function AppointmentEdit() {
         >
           <button
             className="btn-outline"
-            onClick={() => navigate(`/appointments/${id}`)}
+            onClick={() => router.push(`/appointments/${id}`)}
           >
             <ArrowLeft size={13} /> Back
           </button>

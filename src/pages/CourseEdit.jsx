@@ -1,5 +1,9 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+// Navigation handled by Next.js wrapper
+// import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { getCourseById, updateCourse } from "../services/courseService";
 
@@ -16,9 +20,8 @@ const LEVEL_OPTIONS = [
 ];
 const STATUS_OPTIONS = ["ACTIVE", "INACTIVE", "ARCHIVED"];
 
-export default function CourseEdit() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function CourseEdit({ id }) {
+  const router = useRouter();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({});
@@ -65,7 +68,7 @@ export default function CourseEdit() {
         level: form.level,
         status: form.status,
       });
-      navigate(`/courses/${id}`);
+      router.push(`/courses/${id}`);
     } catch (error) {
       console.error("Error updating course:", error);
     }
@@ -92,7 +95,7 @@ export default function CourseEdit() {
         >
           <button
             className="btn-outline"
-            onClick={() => navigate(`/courses/${id}`)}
+            onClick={() => router.push(`/courses/${id}`)}
           >
             <ArrowLeft size={13} /> Back
           </button>
@@ -245,7 +248,7 @@ export default function CourseEdit() {
             <button
               type="button"
               className="btn-cancel"
-              onClick={() => navigate(`/courses/${id}`)}
+              onClick={() => router.push(`/courses/${id}`)}
             >
               Cancel
             </button>

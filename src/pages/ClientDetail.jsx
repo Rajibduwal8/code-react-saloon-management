@@ -1,11 +1,12 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Edit, Trash2Icon } from "lucide-react";
 import { getClientById, deleteClient } from "../services/clientService";
 
-export default function ClientDetail() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function ClientDetail({ id }) {
+  const router = useRouter();
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +28,7 @@ export default function ClientDetail() {
     if (window.confirm("Are you sure you want to delete this client?")) {
       try {
         await deleteClient(id);
-        navigate("/clients");
+        router.push("/clients");
       } catch (error) {
         console.error("Error deleting client:", error);
       }
@@ -47,7 +48,7 @@ export default function ClientDetail() {
       <div style={{ padding: "40px 28px" }}>
         <button
           className="btn-outline"
-          onClick={() => navigate("/clients")}
+          onClick={() => router.push("/clients")}
           style={{ marginBottom: 20 }}
         >
           <ArrowLeft size={13} /> Back to Clients
@@ -70,7 +71,10 @@ export default function ClientDetail() {
             marginBottom: 20,
           }}
         >
-          <button className="btn-outline" onClick={() => navigate("/clients")}>
+          <button
+            className="btn-outline"
+            onClick={() => router.push("/clients")}
+          >
             <ArrowLeft size={13} /> Back
           </button>
           <div>

@@ -1,11 +1,12 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Edit, Trash2Icon } from "lucide-react";
 import { getStaffById, deleteStaff } from "../services/staffService";
 
-export default function StaffDetail() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function StaffDetail({ id }) {
+  const router = useRouter();
   const [staff, setStaff] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +28,7 @@ export default function StaffDetail() {
     if (window.confirm("Are you sure you want to delete this staff member?")) {
       try {
         await deleteStaff(id);
-        navigate("/staff");
+        router.push("/staff");
       } catch (error) {
         console.error("Error deleting staff:", error);
       }
@@ -47,7 +48,7 @@ export default function StaffDetail() {
       <div style={{ padding: "40px 28px" }}>
         <button
           className="btn-outline"
-          onClick={() => navigate("/staff")}
+          onClick={() => router.push("/staff")}
           style={{ marginBottom: 20 }}
         >
           <ArrowLeft size={13} /> Back to Staff
@@ -70,7 +71,7 @@ export default function StaffDetail() {
             marginBottom: 20,
           }}
         >
-          <button className="btn-outline" onClick={() => navigate("/staff")}>
+          <button className="btn-outline" onClick={() => router.push("/staff")}>
             <ArrowLeft size={13} /> Back
           </button>
           <div>

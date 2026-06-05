@@ -1,12 +1,13 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import EnrollStudentModal from "../components/modals/EnrollStudentModal";
 import { getStudentById } from "../services/studentService";
 
-export default function StudentEdit() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function StudentEdit({ id }) {
+  const router = useRouter();
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,7 +46,7 @@ export default function StudentEdit() {
         >
           <button
             className="btn-outline"
-            onClick={() => navigate(`/students/${id}`)}
+            onClick={() => router.push(`/students/${id}`)}
           >
             <ArrowLeft size={13} /> Back
           </button>
@@ -61,8 +62,8 @@ export default function StudentEdit() {
       {student && (
         <EnrollStudentModal
           studentData={student}
-          onClose={() => navigate(`/students/${id}`)}
-          onSuccess={() => navigate(`/students/${id}`)}
+          onClose={() => router.push(`/students/${id}`)}
+          onSuccess={() => router.push(`/students/${id}`)}
         />
       )}
     </div>

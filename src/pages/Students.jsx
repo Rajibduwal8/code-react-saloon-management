@@ -1,12 +1,16 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+// Navigation handled by Next.js wrapper
+// import { useNavigate } from "react-router-dom";
 import { EditIcon, Eye, Plus, Trash2Icon } from "lucide-react";
 import Pagination from "../components/ui/Pagination";
 import EnrollStudentModal from "../components/modals/EnrollStudentModal";
 import { getStudents, deleteStudent } from "../services/studentService";
 
 export default function Students() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -183,7 +187,7 @@ export default function Students() {
                     <td>
                       <div style={{ display: "flex", gap: 8 }}>
                         <button
-                          onClick={() => navigate(`/students/${student.id}`)}
+                          onClick={() => router.push(`/students/${student.id}`)}
                           style={{
                             background: "none",
                             border: "none",
@@ -197,7 +201,7 @@ export default function Students() {
                         </button>
                         <button
                           onClick={() =>
-                            navigate(`/students/${student.id}/edit`)
+                            router.push(`/students/${student.id}/edit`)
                           }
                           style={{
                             background: "none",

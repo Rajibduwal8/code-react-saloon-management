@@ -1,14 +1,17 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+// Navigation handled by Next.js wrapper
+// import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit, Trash2Icon } from "lucide-react";
 import {
   getAppointmentById,
   deleteAppointment,
 } from "../services/appointmentService";
 
-export default function AppointmentDetail() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function AppointmentDetail({ id }) {
+  const router = useRouter();
   const [appointment, setAppointment] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +33,7 @@ export default function AppointmentDetail() {
     if (window.confirm("Delete this appointment?")) {
       try {
         await deleteAppointment(id);
-        navigate("/appointments");
+        router.push("/appointments");
       } catch (error) {
         console.error("Error deleting appointment:", error);
       }
@@ -50,7 +53,7 @@ export default function AppointmentDetail() {
       <div style={{ padding: "40px 28px" }}>
         <button
           className="btn-outline"
-          onClick={() => navigate("/appointments")}
+          onClick={() => router.push("/appointments")}
           style={{ marginBottom: 20 }}
         >
           <ArrowLeft size={13} /> Back to Appointments
@@ -77,7 +80,7 @@ export default function AppointmentDetail() {
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <button
               className="btn-outline"
-              onClick={() => navigate("/appointments")}
+              onClick={() => router.push("/appointments")}
             >
               <ArrowLeft size={13} /> Back
             </button>
@@ -92,7 +95,7 @@ export default function AppointmentDetail() {
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button
               className="btn-outline"
-              onClick={() => navigate(`/appointments/${id}/edit`)}
+              onClick={() => router.push(`/appointments/${id}/edit`)}
             >
               <Edit size={14} /> Edit
             </button>
