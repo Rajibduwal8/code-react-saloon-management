@@ -6,6 +6,8 @@ import Sidebar from "@/src/components/layout/Sidebar";
 import Topbar from "@/src/components/layout/Topbar";
 import NewBookingModal from "@/src/components/modals/NewBookingModal";
 import EnrollStudentModal from "@/src/components/modals/EnrollStudentModal";
+import { Toaster } from "react-hot-toast";
+import AuthProtected from "@/src/components/common/AuthProtected";
 import "@/src/styles/index.css";
 
 // Sidebar routes configuration
@@ -18,6 +20,14 @@ const getSidebarRoutes = () => [
   { path: "/courses", label: "Courses", icon: "Layers" },
   { path: "/analytics", label: "Analytics", icon: "BarChart3" },
   { path: "/service-menu", label: "Service Menu", icon: "Grid" },
+];
+
+const PUBLIC_PATHS = [
+  "/login",
+  "/register",
+  "/org-register",
+  "/forgot-password",
+  "/reset-password"
 ];
 
 export default function RootLayout({ children }) {
@@ -36,42 +46,64 @@ export default function RootLayout({ children }) {
     // The navigation happens through the Sidebar component
   };
 
+  const isAuthPage = PUBLIC_PATHS.includes(pathname);
+
+  if (isAuthPage) {
+    return (
+      <html lang="en">
+        <head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <title>Wellness Studio</title>
+        </head>
+        <body>
+        <Toaster position="top-right" />
+        {children}
+      </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Wellness Studio</title>
+        <script src="/config.js"></script>
       </head>
       <body>
-        <div className="layout">
-          <Sidebar
-            activePage={activePage}
-            setActivePage={handleNavigation}
-            collapsed={sidebarCollapsed}
-            setCollapsed={setSidebarCollapsed}
-            routes={sidebarRoutes}
-          />
-
-          <div className={`main-content ${sidebarCollapsed ? "expanded" : ""}`}>
-            <Topbar
+        <Toaster position="top-right" />
+        <AuthProtected>
+          <div className="layout">
+            <Sidebar
+              activePage={activePage}
+              setActivePage={handleNavigation}
               collapsed={sidebarCollapsed}
               setCollapsed={setSidebarCollapsed}
-              onQuickBooking={() => setShowBooking(true)}
-              onEnrollStudent={() => setShowEnroll(true)}
+              routes={sidebarRoutes}
             />
 
-            {/* Page content */}
-            <div className="page-content">{children}</div>
+            <div className={`main-content ${sidebarCollapsed ? "expanded" : ""}`}>
+              <Topbar
+                collapsed={sidebarCollapsed}
+                setCollapsed={setSidebarCollapsed}
+                onQuickBooking={() => setShowBooking(true)}
+                onEnrollStudent={() => setShowEnroll(true)}
+              />
 
-            {showBooking && (
-              <NewBookingModal onClose={() => setShowBooking(false)} />
-            )}
-            {showEnroll && (
-              <EnrollStudentModal onClose={() => setShowEnroll(false)} />
-            )}
+              {/* Page content */}
+              <div className="page-content">{children}</div>
+
+              {showBooking && (
+                <NewBookingModal onClose={() => setShowBooking(false)} />
+              )}
+              {showEnroll && (
+                <EnrollStudentModal onClose={() => setShowEnroll(false)} />
+              )}
+            </div>
           </div>
-        </div>
+        </AuthProtected>
       </body>
     </html>
   );

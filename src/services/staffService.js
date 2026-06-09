@@ -1,29 +1,25 @@
-import {
-  getResource,
-  getResourceById,
-  createResource,
-  updateResource,
-  deleteResource,
-} from "./api";
+import _BaseAPIService from "./_BaseAPIService";
+import { getResource, getResourceById, createResource, updateResource, deleteResource } from "./api";
+
+const apiService = _BaseAPIService.instance;
 
 /**
  * Staff Service
  * Handles all staff-related API calls and data management
- *
- * API Endpoints to implement:
- * - GET /staff - List all staff members
- * - GET /staff/:id - Get single staff details
- * - POST /staff - Create new staff
- * - PUT /staff/:id - Update staff
- * - DELETE /staff/:id - Delete staff
  */
 
 /**
- * Get all staff
- * @returns {Promise<Array>} List of staff members
+ * Get all staff members with optional pagination
+ * @param {number} page - Page number (1-based)
+ * @param {number} pageSize - Records per page
  */
-export const getStaff = async () => {
-  return getResource("staff");
+export const getStaff = async (page = 1, pageSize = 10) => {
+  try {
+    const response = await apiService.get(`/staff?Page=${page}&PageSize=${pageSize}`);
+    return response.data;
+  } catch {
+    return getResource("staff");
+  }
 };
 
 /**

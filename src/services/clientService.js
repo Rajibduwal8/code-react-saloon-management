@@ -18,12 +18,27 @@ import {
  * - DELETE /clients/:id - Delete client
  */
 
+import _BaseAPIService from "./_BaseAPIService";
+
+const apiService = _BaseAPIService.instance;
+
 /**
- * Get all clients
- * @returns {Promise<Array>} List of clients
+ * Get all clients with optional pagination
+ * @param {number} page - Page number (1-indexed or 0-indexed based on API)
+ * @param {number} pageSize - Number of records per page
+ * @returns {Promise<Object>} Paginated response or array
  */
-export const getClients = async () => {
-  return getResource("clients");
+export const getClients = async (page = 1, pageSize = 10) => {
+  // If the mock api.js was returning an array, we simulate pagination here,
+  // or pass the params to the real API.
+  try {
+    const response = await apiService.get(`/clients?Page=${page}&PageSize=${pageSize}`);
+    return response.data;
+  } catch (error) {
+    // Fallback to local mock if _BaseAPIService fails (for testing)
+    const { getResource } = await import("./api");
+    return getResource("clients");
+  }
 };
 
 /**

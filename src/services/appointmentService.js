@@ -1,29 +1,24 @@
-import {
-  getResource,
-  getResourceById,
-  createResource,
-  updateResource,
-  deleteResource,
-} from "./api";
+import _BaseAPIService from "./_BaseAPIService";
+import { getResource, getResourceById, createResource, updateResource, deleteResource } from "./api";
+
+const apiService = _BaseAPIService.instance;
 
 /**
- * Appointment/Booking Service
- * Handles all appointment-related API calls and data management
- *
- * API Endpoints to implement:
- * - GET /appointments - List all appointments
- * - GET /appointments/:id - Get single appointment details
- * - POST /appointments - Create new appointment
- * - PUT /appointments/:id - Update appointment
- * - DELETE /appointments/:id - Delete appointment
+ * Appointment Service - Handles all appointment-related API calls
  */
 
 /**
- * Get all appointments
- * @returns {Promise<Array>} List of appointments
+ * Get all appointments with optional pagination
+ * @param {number} page - Page number (1-based)
+ * @param {number} pageSize - Records per page
  */
-export const getAppointments = async () => {
-  return getResource("appointments");
+export const getAppointments = async (page = 1, pageSize = 10) => {
+  try {
+    const response = await apiService.get(`/customer-appointments?Page=${page}&PageSize=${pageSize}`);
+    return response.data;
+  } catch {
+    return getResource("appointments");
+  }
 };
 
 /**

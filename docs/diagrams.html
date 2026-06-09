@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saloon Management System - Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        h2 {
+            color: white;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-left: 5px solid #4ecdc4;
+            border-radius: 5px;
+        }
+        
+        .diagram-wrapper {
+            background: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow-x: auto;
+        }
+        
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            min-height: 400px;
+        }
+        
+        .mermaid svg {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎭 Saloon Management System - Visual Diagrams</h1>
+        
+        <h2>📅 Appointment Booking & Completion Activity Flow</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+graph TD
+    A["👤 Staff Initiates<br/>New Booking"] --> B["🔍 Search/Add Customer"]
+    B --> C{"Customer<br/>Exists?"}
+    C -->|No| D["➕ Create New Customer"]
+    C -->|Yes| E["📅 Select Date & Time"]
+    D --> E
+    E --> F["👔 Assign Staff Member"]
+    F --> G["🛍️ Add Services<br/>Multi-select"]
+    G --> H["💭 Add Remarks<br/>Optional"]
+    H --> I["📝 Review & Confirm"]
+    I --> J["POST Create Appointment<br/>Status: Booked"]
+    J --> K["⏰ Appointment Scheduled"]
+    K --> L["🕐 On Appointment Date"]
+    L --> M["🔴 Mark Complete<br/>Open Checkout Modal"]
+    M --> N["🔍 Review Service Lines"]
+    N --> O["➕ Add Extra Items<br/>Optional"]
+    O --> P["💰 Collect Payment"]
+    P --> Q{"Payment<br/>Complete?"}
+    Q -->|Full Payment| R["✅ Settled"]
+    Q -->|Partial| S["⏳ Outstanding Created"]
+    Q -->|Zero| T["📋 Full Credit Record"]
+    R --> U["📊 Update Dashboard"]
+    S --> U
+    T --> U
+    U --> V["✔️ Appointment Completed"]
+    
+    style A fill:#4ecdc4,stroke:#0d7377,color:#fff
+    style K fill:#96ceb4,stroke:#558b6f,color:#fff
+    style M fill:#ffeaa7,stroke:#fdcb6e,color:#333
+    style V fill:#a29bfe,stroke:#6c5ce7,color:#fff
+            </div>
+        </div>
+        
+        <h2>📚 Course Enrollment & Fee Collection Activity Flow</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+graph TD
+    A["👨‍🏫 Admin Creates Course"] --> B["📖 Set Course Details<br/>Name, Fee, Duration"]
+    B --> C["✅ Course Published<br/>Status: Active"]
+    C --> D["👨‍🎓 Student Registration"]
+    D --> E["📝 Enter Student Info"]
+    E --> F["🎓 Select Course to Enroll"]
+    F --> G["💰 Set Fee for Enrollment"]
+    G --> H["POST Create Enrollment<br/>Status: Pending"]
+    H --> I["⏳ Fee Payment Pending"]
+    I --> J["💳 Record Fee Payment"]
+    J --> K{"Payment<br/>Complete?"}
+    K -->|Full Amount| L["✅ Enrollment Completed"]
+    K -->|Partial| M["⏳ Balance Outstanding"]
+    L --> N["📊 Add to Dashboard<br/>Active Enrollments"]
+    M --> N
+    N --> O["📈 Track in Reports"]
+    
+    style A fill:#4ecdc4,stroke:#0d7377,color:#fff
+    style C fill:#96ceb4,stroke:#558b6f,color:#fff
+    style H fill:#ffeaa7,stroke:#fdcb6e,color:#333
+    style L fill:#a29bfe,stroke:#6c5ce7,color:#fff
+            </div>
+        </div>
+        
+        <h2>🏪 Purchase & Supplier Payment Activity Flow</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+graph TD
+    A["📦 Create Purchase Order"] --> B["🏢 Select Supplier"]
+    B --> C["📅 Set Purchase Date"]
+    C --> D["➕ Add Line Items"]
+    D --> E["🛒 Select Product/Quantity"]
+    E --> F{"More<br/>Items?"}
+    F -->|Yes| E
+    F -->|No| G["💵 Calculate Total Amount"]
+    G --> H["💳 Record Payment"]
+    H --> I{"Payment<br/>Complete?"}
+    I -->|Full| J["✅ Purchase Closed"]
+    I -->|Partial| K["⏳ Create Pending Payment"]
+    J --> L["📦 Update Stock Levels"]
+    K --> L
+    L --> M["📊 Available in Reports"]
+    
+    style A fill:#4ecdc4,stroke:#0d7377,color:#fff
+    style D fill:#96ceb4,stroke:#558b6f,color:#fff
+    style H fill:#ffeaa7,stroke:#fdcb6e,color:#333
+    style J fill:#a29bfe,stroke:#6c5ce7,color:#fff
+            </div>
+        </div>
+        
+        <h2>🔐 Authentication & Authorization Flow</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+graph TD
+    A["🌐 User Visits App"] --> B{"JWT Valid<br/>in Storage?"}
+    B -->|Yes| C["✅ Auto-Redirect<br/>to Dashboard"]
+    B -->|No| D["🔐 Login Page"]
+    D --> E["📧 Enter Email<br/>🔒 Enter Password"]
+    E --> F["POST /api/auth/login"]
+    F --> G{"Credentials<br/>Valid?"}
+    G -->|No| H["❌ Show Error<br/>Invalid credentials"]
+    H --> D
+    G -->|Yes| I["💾 Store JWT<br/>+ Role + OrgCode"]
+    I --> J["Decode JWT<br/>Get Staff ID"]
+    J --> K["🔄 Redirect to Dashboard"]
+    K --> L["🎯 Dashboard Loads"]
+    L --> M{"Check User<br/>Role"}
+    M -->|OrgAdmin| N["📊 Full Dashboard<br/>All Metrics"]
+    M -->|InternalStaff| O["📋 Limited Dashboard<br/>No Finance"]
+    M -->|Finance| P["💼 Finance Dashboard<br/>Reports & Receivables"]
+    
+    style A fill:#4ecdc4,stroke:#0d7377,color:#fff
+    style D fill:#ff6b6b,stroke:#c92a2a,color:#fff
+    style I fill:#96ceb4,stroke:#558b6f,color:#fff
+    style N fill:#a29bfe,stroke:#6c5ce7,color:#fff
+            </div>
+        </div>
+        
+        <h2>💳 Payment Decision Flow</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+graph TD
+    A["💰 Checkout Initiated"] --> B["💵 Calculate Total Amount"]
+    B --> C["🧮 Input Payment Amount"]
+    C --> D{"Amount<br/>Valid?"}
+    D -->|>Total| E["❌ Validation Error<br/>Cannot exceed total"]
+    E --> C
+    D -->|≤Total| F{"Amount =<br/>Total?"}
+    F -->|Yes| G["✅ Full Payment<br/>Create SaleRecord"]
+    F -->|No| H{"Amount<br/>> 0?"}
+    H -->|Yes| I["⏳ Partial Payment<br/>Create CustomerReceivable<br/>Status: PartiallyPaid"]
+    H -->|No| J["📋 Zero Payment<br/>Create CustomerReceivable<br/>Status: Outstanding"]
+    G --> K["🏁 Appointment Completed"]
+    I --> K
+    J --> K
+    K --> L["📊 Update Dashboard"]
+    
+    style A fill:#ffeaa7,stroke:#fdcb6e,color:#333
+    style G fill:#96ceb4,stroke:#558b6f,color:#fff
+    style I fill:#fd79a8,stroke:#e84393,color:#fff
+    style J fill:#fd79a8,stroke:#e84393,color:#fff
+    style K fill:#a29bfe,stroke:#6c5ce7,color:#fff
+            </div>
+        </div>
+        
+        <h2>📊 Report Access Decision Flow</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+graph TD
+    A["👤 User Requests Report"] --> B{"User<br/>Role?"}
+    B -->|OrgAdmin| C["✅ All Reports Available"]
+    B -->|Finance| D["✅ Financial Reports<br/>Sales, Receivables,<br/>Supplier Payments"]
+    B -->|InternalStaff| E["❌ Access Denied<br/>Insufficient Permissions"]
+    B -->|SuperAdmin| F["✅ All Reports +<br/>Audit & System Logs"]
+    C --> G["📈 Load Report"]
+    D --> G
+    F --> G
+    E --> H["⚠️ Show Error Message"]
+    G --> I["🔍 Apply Filters<br/>Date Range, Criteria"]
+    I --> J["📊 Render Data<br/>Table + Charts"]
+    J --> K["💾 Export to CSV/PDF<br/>Optional"]
+    
+    style C fill:#96ceb4,stroke:#558b6f,color:#fff
+    style D fill:#96ceb4,stroke:#558b6f,color:#fff
+    style E fill:#ff6b6b,stroke:#c92a2a,color:#fff
+    style G fill:#ffeaa7,stroke:#fdcb6e,color:#333
+            </div>
+        </div>
+        
+        <h2>🔌 System Component Diagram</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+graph TB
+    subgraph Frontend["FRONTEND LAYER (React/Next.js)"]
+        Pages["📄 Pages<br/>Dashboard | Customers<br/>Staff | Appointments<br/>Courses | Analytics"]
+        
+        Components["🧩 Components<br/>Modal | Forms<br/>Table | Timeline<br/>Charts"]
+        
+        Services["🔌 Services<br/>authService | apiClient<br/>customerService<br/>appointmentService"]
+        
+        Hooks["🪝 Hooks<br/>useProfile | useState<br/>useEffect"]
+    end
+    
+    subgraph API["API LAYER (RESTful + Interceptors)"]
+        Auth["🔐 Auth Middleware<br/>JWT Validation<br/>Role Check"]
+        
+        TenantMiddleware["🏢 Tenant Resolution<br/>X-Org-Code Lookup<br/>DB Context Injection"]
+        
+        ErrorHandler["⚠️ Error Handler<br/>401 Redirect<br/>Error Response"]
+    end
+    
+    subgraph Backend["BACKEND LAYER (.NET 8)"]
+        Controllers["📡 Controllers<br/>CustomerController<br/>AppointmentController<br/>ReportController"]
+        
+        Services2["⚙️ Services/Business Logic<br/>AppointmentService<br/>CheckoutService<br/>ReportService"]
+        
+        Repositories["💾 Repositories<br/>CustomerRepo<br/>AppointmentRepo<br/>FinancialRepo"]
+    end
+    
+    subgraph Database["DATABASE LAYER"]
+        Master["🔑 Master Database<br/>Users | Organizations<br/>Tenants | Config"]
+        
+        Tenant["🗄️ Tenant Databases<br/>Customers | Staff<br/>Appointments | Courses<br/>Financial Records"]
+    end
+    
+    Pages --> Components
+    Pages --> Services
+    Components --> Services
+    Services --> Auth
+    Services --> TenantMiddleware
+    
+    Auth --> Controllers
+    TenantMiddleware --> Controllers
+    
+    Controllers --> Services2
+    Services2 --> Repositories
+    
+    Repositories --> Master
+    Repositories --> Tenant
+    
+    Controllers --> ErrorHandler
+    ErrorHandler -.->|401| Services
+    
+    style Frontend fill:#4ecdc4,stroke:#0d7377,color:#fff
+    style API fill:#45b7d1,stroke:#0d7377,color:#fff
+    style Backend fill:#96ceb4,stroke:#558b6f,color:#fff
+    style Database fill:#ff6b6b,stroke:#c92a2a,color:#fff
+            </div>
+        </div>
+        
+        <h2>📊 Sequence Diagram - Complete Appointment Workflow</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+sequenceDiagram
+    actor Staff as 👨‍💼 Staff
+    participant Frontend as 🖥️ Frontend
+    participant API as 🔌 API Server
+    participant DB as 💾 Database
+    
+    Staff->>Frontend: Click "New Booking"
+    Frontend->>API: GET /api/customers?search=
+    API->>DB: Query Customers
+    DB-->>API: Customer List
+    API-->>Frontend: Render Options
+    
+    Staff->>Frontend: Select Customer
+    Frontend->>API: GET /api/services?status=Active
+    API->>DB: Query Services
+    DB-->>API: Active Services
+    API-->>Frontend: Render Services
+    
+    Staff->>Frontend: Add Multiple Services
+    Frontend->>API: GET /api/staff?status=Active
+    API->>DB: Query Staff
+    DB-->>API: Active Staff
+    API-->>Frontend: Render Staff Options
+    
+    Staff->>Frontend: Select Staff & Date
+    Frontend->>API: POST /api/appointments
+    API->>DB: Create Appointment (Booked)
+    DB-->>API: Appointment Created
+    API-->>Frontend: Success Response
+    Frontend->>Staff: Show Confirmation
+    
+    Staff->>Frontend: Navigate to Appointment
+    Frontend->>API: GET /api/appointments/{id}
+    API->>DB: Fetch Appointment
+    DB-->>API: Appointment Details
+    API-->>Frontend: Display Details
+    
+    Staff->>Frontend: Click "Complete"
+    Frontend->>Staff: Open Checkout Modal
+    
+    Staff->>Frontend: Review Services & Add Items
+    Frontend->>Frontend: Calculate Total
+    
+    Staff->>Frontend: Enter Payment Details
+    Frontend->>Frontend: Validate Payment ≤ Total
+    
+    Staff->>Frontend: Click "Finalize"
+    Frontend->>API: POST /api/appointments/{id}/complete
+    API->>DB: Create SaleRecord
+    API->>DB: Create PaymentTransaction
+    
+    alt Full Payment
+        API->>DB: paymentStatus = Paid
+    else Partial Payment
+        API->>DB: Create CustomerReceivable (PartiallyPaid)
+    else Zero Payment
+        API->>DB: Create CustomerReceivable (Outstanding)
+    end
+    
+    DB-->>API: Updated Records
+    API-->>Frontend: Success Response
+    Frontend->>Staff: Show Completion Message
+    Frontend->>API: GET /api/dashboard/today-stats
+    API->>DB: Query Updated Stats
+    DB-->>API: Dashboard Data
+    API-->>Frontend: Update KPIs
+            </div>
+        </div>
+        
+        <h2>📈 Data Flow Diagram - Revenue Generation Pipeline</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+graph LR
+    A["📅 Appointment<br/>Created"] -->|Booked Status| B["⏰ Scheduled"]
+    B -->|On Date| C["🎯 Complete<br/>Appointment"]
+    C -->|Open Checkout| D["🛍️ Service Lines<br/>+ Additional Items"]
+    D -->|Calculate| E["💰 Total Amount"]
+    E -->|Collect Payment| F["💳 Payment"]
+    
+    F -->|Full Payment| G["💵 SaleRecord<br/>Full Amount"]
+    F -->|Partial| H["💵 SaleRecord<br/>Partial Amount"]
+    F -->|Zero| I["💵 SaleRecord<br/>Zero Amount"]
+    
+    G -->|paymentStatus| J["✅ Paid"]
+    H -->|paymentStatus| K["⏳ Unpaid"]
+    I -->|paymentStatus| L["⏳ Unpaid"]
+    
+    K -->|Create| M["📋 CustomerReceivable<br/>Partial Balance"]
+    L -->|Create| N["📋 CustomerReceivable<br/>Full Balance"]
+    
+    G -->|Aggregate| O["📊 Dashboard<br/>Today's Sales"]
+    M -->|Aggregate| O
+    N -->|Aggregate| O
+    
+    J -->|Include| P["📈 Sales Report"]
+    K -->|Include| P
+    L -->|Include| P
+    
+    M -->|Track| Q["💳 Receivables<br/>Report"]
+    N -->|Track| Q
+    
+    style A fill:#4ecdc4,stroke:#0d7377,color:#fff
+    style C fill:#ffeaa7,stroke:#fdcb6e,color:#333
+    style G fill:#96ceb4,stroke:#558b6f,color:#fff
+    style O fill:#fd79a8,stroke:#e84393,color:#fff
+    style P fill:#a29bfe,stroke:#6c5ce7,color:#fff
+            </div>
+        </div>
+        
+        <h2>🗄️ Data Model Relationship Diagram</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+graph TB
+    Customer["👥 Customer<br/>ID | Name | Phone<br/>Email | Type"]
+    
+    Appointment["📅 Appointment<br/>ID | CustomerID<br/>Date | Status<br/>PaymentStatus"]
+    
+    Service["🛍️ Service<br/>ID | Name | Price<br/>Duration | Status"]
+    
+    AppointmentService["🔗 AppointmentService<br/>AppointmentID<br/>ServiceID | Price"]
+    
+    Staff["👔 Staff<br/>ID | Name | Role<br/>Status | Salary"]
+    
+    SaleRecord["💰 SaleRecord<br/>ID | AppointmentID<br/>Amount | Date"]
+    
+    Payment["💳 PaymentTransaction<br/>ID | SaleID<br/>Amount | Method<br/>Date"]
+    
+    Receivable["📋 CustomerReceivable<br/>ID | CustomerID<br/>AppointmentID<br/>Amount | Balance"]
+    
+    Course["📚 Course<br/>ID | Name | Fee<br/>Duration | Status"]
+    
+    Student["👨‍🎓 Student<br/>ID | Name | Phone<br/>Email | Address"]
+    
+    Enrollment["🎓 StudentEnrollment<br/>ID | StudentID | CourseID<br/>Fee | PaidAmount"]
+    
+    Purchase["📦 Purchase<br/>ID | SupplierID<br/>Date | TotalAmount"]
+    
+    PurchaseItem["🛒 PurchaseItem<br/>ID | PurchaseID<br/>ProductID | Qty"]
+    
+    Product["📦 Product<br/>ID | Name | Stock<br/>Price | Category"]
+    
+    Supplier["🏢 Supplier<br/>ID | Name | Phone<br/>Email | Address"]
+    
+    Expense["📋 Expense<br/>ID | Type | Amount<br/>Date | Method"]
+    
+    Customer -->|books| Appointment
+    Appointment -->|uses| AppointmentService
+    Service -->|used in| AppointmentService
+    Appointment -->|assigned to| Staff
+    Appointment -->|generates| SaleRecord
+    SaleRecord -->|has| Payment
+    Appointment -->|creates| Receivable
+    Customer -->|owes| Receivable
+    
+    Student -->|enrolls in| Enrollment
+    Course -->|has| Enrollment
+    Enrollment -->|creates| Receivable
+    
+    Supplier -->|provides| Product
+    Purchase -->|from| Supplier
+    Purchase -->|contains| PurchaseItem
+    Product -->|in| PurchaseItem
+    
+    style Customer fill:#4ecdc4,stroke:#0d7377,color:#fff
+    style Appointment fill:#4ecdc4,stroke:#0d7377,color:#fff
+    style SaleRecord fill:#96ceb4,stroke:#558b6f,color:#fff
+    style Receivable fill:#fd79a8,stroke:#e84393,color:#fff
+    style Course fill:#a29bfe,stroke:#6c5ce7,color:#fff
+    style Purchase fill:#ffeaa7,stroke:#fdcb6e,color:#333
+            </div>
+        </div>
+        
+        <h2>📦 Module Dependency Diagram</h2>
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+graph TB
+    Auth["🔐 Authentication<br/>(Foundation)"]
+    
+    Customer["👥 Customers"]
+    Staff["👔 Staff"]
+    Service["🛍️ Services"]
+    
+    Core["📅 Core Modules"]
+    Appointment["📅 Appointments"]
+    
+    Billing["💳 Billing & Checkout"]
+    Financial["💼 Financial Records"]
+    
+    Education["🎓 Education"]
+    Course["📚 Courses"]
+    Student["👨‍🎓 Students"]
+    
+    Reporting["📈 Reporting"]
+    
+    Auth --> Customer
+    Auth --> Staff
+    Auth --> Service
+    
+    Customer --> Appointment
+    Staff --> Appointment
+    Service --> Appointment
+    
+    Appointment --> Billing
+    Billing --> Financial
+    
+    Course --> Student
+    Student --> Financial
+    
+    Financial --> Reporting
+    Appointment --> Reporting
+    
+    style Auth fill:#ff6b6b,stroke:#c92a2a,color:#fff
+    style Appointment fill:#4ecdc4,stroke:#0d7377,color:#fff
+    style Billing fill:#ffeaa7,stroke:#fdcb6e,color:#333
+    style Financial fill:#fd79a8,stroke:#e84393,color:#fff
+    style Reporting fill:#a29bfe,stroke:#6c5ce7,color:#fff
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

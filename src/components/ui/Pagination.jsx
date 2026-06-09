@@ -1,24 +1,146 @@
-import React from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import React from "react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
-export default function Pagination({ current = 1, total = 12, perPage = 10, totalEntries = 120 }) {
+export default function Pagination({
+  current = 1,
+  total = 1,
+  perPage = 10,
+  onPageChange,
+  onPerPageChange,
+}) {
+  const handlePrev = () => {
+    if (current > 1) onPageChange(current - 1);
+  };
+
+  const handleNext = () => {
+    if (current < total) onPageChange(current + 1);
+  };
+
+  // Generate pagination range
+  const getPageNumbers = () => {
+    const pages = [];
+    let startPage = Math.max(1, current - 2);
+    let endPage = Math.min(total, current + 2);
+
+    if (current <= 3) {
+      endPage = Math.min(total, 5);
+    }
+    if (current >= total - 2) {
+      startPage = Math.max(1, total - 4);
+    }
+
+    if (startPage > 1) {
+      pages.push(1);
+      if (startPage > 2) pages.push("...");
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    if (endPage < total) {
+      if (endPage < total - 1) pages.push("...");
+      pages.push(total);
+    }
+
+    return pages;
+  };
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderTop: '1px solid #F2EDE8' }}>
-      <span style={{ fontSize: 12, color: 'var(--muted)' }}>
-        Showing 1 to {perPage} of {totalEntries} entries
-      </span>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        <button className="page-btn"><ChevronLeft size={12} /></button>
-        {[1, 2, 3, '...', total].map((p, i) => (
-          <button key={i} className={`page-btn ${p === current ? 'active' : ''}`}>{p}</button>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: "16px",
+        padding: "16px 28px",
+        borderTop: "1px solid #F2EDE8",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <span style={{ fontSize: 13, color: "var(--muted)" }}>
+          Rows per page:
+        </span>
+        <select
+          value={perPage}
+          onChange={(e) => onPerPageChange(Number(e.target.value))}
+          style={{
+            padding: "4px 8px",
+            borderRadius: "6px",
+            border: "1px solid #e2e8f0",
+            fontSize: "13px",
+            color: "var(--dark)",
+            background: "white",
+            cursor: "pointer",
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((size) => (
+            <option key={size} value={size}>
+              {size}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <button
+          onClick={() => onPageChange(1)}
+          disabled={current === 1}
+          className={`page-btn ${current === 1 ? "disabled" : ""}`}
+          style={{ padding: "6px", cursor: current === 1 ? "not-allowed" : "pointer" }}
+        >
+          <ChevronsLeft size={14} />
+        </button>
+        <button
+          onClick={handlePrev}
+          disabled={current === 1}
+          className={`page-btn ${current === 1 ? "disabled" : ""}`}
+          style={{ padding: "6px", cursor: current === 1 ? "not-allowed" : "pointer" }}
+        >
+          <ChevronLeft size={14} />
+        </button>
+
+        {getPageNumbers().map((p, i) => (
+          <button
+            key={i}
+            onClick={() => typeof p === "number" && onPageChange(p)}
+            className={`page-btn ${p === current ? "active" : ""}`}
+            style={{
+              padding: "6px 12px",
+              cursor: typeof p === "number" ? "pointer" : "default",
+              background: p === current ? "var(--brown)" : "white",
+              color: p === current ? "white" : "var(--dark)",
+              fontWeight: p === current ? 600 : 400,
+            }}
+          >
+            {p}
+          </button>
         ))}
-        <button className="page-btn"><ChevronRight size={12} /></button>
-        <input
-          style={{ width: 36, height: 28, border: '1px solid var(--sand)', borderRadius: 6, textAlign: 'center', fontSize: 12, marginLeft: 8 }}
-          defaultValue={perPage}
-        />
-        <span style={{ fontSize: 12, color: 'var(--muted)', marginLeft: 4 }}>entries per page</span>
+
+        <button
+          onClick={handleNext}
+          disabled={current === total || total === 0}
+          className={`page-btn ${current === total || total === 0 ? "disabled" : ""}`}
+          style={{
+            padding: "6px",
+            cursor: current === total || total === 0 ? "not-allowed" : "pointer",
+          }}
+        >
+          <ChevronRight size={14} />
+        </button>
+        <button
+          onClick={() => onPageChange(total)}
+          disabled={current === total || total === 0}
+          className={`page-btn ${current === total || total === 0 ? "disabled" : ""}`}
+          style={{
+            padding: "6px",
+            cursor: current === total || total === 0 ? "not-allowed" : "pointer",
+          }}
+        >
+          <ChevronsRight size={14} />
+        </button>
       </div>
     </div>
-  )
+  );
 }

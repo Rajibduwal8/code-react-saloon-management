@@ -1,29 +1,24 @@
-import {
-  getResource,
-  getResourceById,
-  createResource,
-  updateResource,
-  deleteResource,
-} from "./api";
+import _BaseAPIService from "./_BaseAPIService";
+import { getResource, getResourceById, createResource, updateResource, deleteResource } from "./api";
+
+const apiService = _BaseAPIService.instance;
 
 /**
- * Student Service
- * Handles all student-related API calls and data management
- *
- * API Endpoints to implement:
- * - GET /students - List all students
- * - GET /students/:id - Get single student details
- * - POST /students - Create new student
- * - PUT /students/:id - Update student
- * - DELETE /students/:id - Delete student
+ * Student Service - Handles all student-related API calls
  */
 
 /**
- * Get all students
- * @returns {Promise<Array>} List of students
+ * Get all students with optional pagination
+ * @param {number} page - Page number (1-based)
+ * @param {number} pageSize - Records per page
  */
-export const getStudents = async () => {
-  return getResource("students");
+export const getStudents = async (page = 1, pageSize = 10) => {
+  try {
+    const response = await apiService.get(`/students?Page=${page}&PageSize=${pageSize}`);
+    return response.data;
+  } catch {
+    return getResource("students");
+  }
 };
 
 /**

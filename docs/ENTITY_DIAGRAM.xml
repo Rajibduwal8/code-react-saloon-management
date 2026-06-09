@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="draw.io" modified="2026-06-09" version="25.0" type="device">
+  <diagram name="Saloon Management System - Entity Diagram" id="ER-Diagram">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="2000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- MASTER DATABASE SECTION -->
+        <mxCell id="master_label" value="MASTER DATABASE" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=bold;" parent="1" vertex="1">
+          <mxGeometry x="50" y="20" width="300" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="org" value="ORGANIZATION&#10;---&#10;id: UUID (PK)&#10;name: string&#10;orgCode: string (UK)&#10;status: enum&#10;isPaid: boolean" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6E6;strokeColor=#C92A2A;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="50" y="70" width="200" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tenant_info" value="TENANTINFO&#10;---&#10;id: UUID (PK)&#10;organizationId: UUID (FK)&#10;databaseName: string (UK)&#10;connectionString: string" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6E6;strokeColor=#C92A2A;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="300" y="70" width="200" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="org_user" value="ORGANIZATIONUSER&#10;---&#10;id: UUID (PK)&#10;userId: string (FK)&#10;organizationId: UUID (FK)&#10;role: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6E6;strokeColor=#C92A2A;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="550" y="70" width="200" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- Relationships: Master DB -->
+        <mxCell id="edge_org_tenant" edge="1" parent="1" source="org" target="tenant_info">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_org_orguser" edge="1" parent="1" source="org" target="org_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- TENANT DATABASE SECTION -->
+        <mxCell id="tenant_label" value="TENANT DATABASE" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=bold;" parent="1" vertex="1">
+          <mxGeometry x="50" y="220" width="700" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- USER & ACCESS MODULE -->
+        <mxCell id="staff" value="STAFF&#10;---&#10;id: UUID (PK)&#10;firstName, lastName: string&#10;email: string (UK)&#10;phone: string&#10;role: enum&#10;status: enum&#10;salary: decimal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="50" y="280" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- CUSTOMER MODULE -->
+        <mxCell id="cust_type" value="CUSTOMERTYPE&#10;---&#10;id: UUID (PK)&#10;name: string (UK)&#10;description: string" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="270" y="280" width="160" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="customer" value="CUSTOMER&#10;---&#10;id: UUID (PK)&#10;firstName, lastName: string&#10;phone: string&#10;email: string&#10;nationalId: string (UK)&#10;customerTypeId: UUID (FK)&#10;skinType: string" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="270" y="410" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- SUPPLIER MODULE -->
+        <mxCell id="supplier" value="SUPPLIER&#10;---&#10;id: UUID (PK)&#10;name: string&#10;phone: string&#10;email: string&#10;address: string" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C2185B;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="490" y="280" width="160" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- CATEGORY MODULE -->
+        <mxCell id="category" value="CATEGORY&#10;---&#10;id: UUID (PK)&#10;name: string&#10;parentId: UUID (FK)&#10;type: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3E5FC;strokeColor=#0277BD;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="710" y="280" width="160" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- SERVICE & PRODUCT MODULE -->
+        <mxCell id="service" value="SERVICE&#10;---&#10;id: UUID (PK)&#10;name: string&#10;categoryId: UUID (FK)&#10;price: decimal&#10;durationMinutes: int&#10;status: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3E5FC;strokeColor=#0277BD;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="710" y="410" width="160" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="product" value="PRODUCT&#10;---&#10;id: UUID (PK)&#10;name: string&#10;categoryId: UUID (FK)&#10;purchasePrice: decimal&#10;sellingPrice: decimal&#10;stockQuantity: int&#10;status: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3E5FC;strokeColor=#0277BD;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="910" y="410" width="160" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- EXPENSE TYPE -->
+        <mxCell id="exp_type" value="EXPENSETYPE&#10;---&#10;id: UUID (PK)&#10;name: string (UK)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D1C4E9;strokeColor=#512DA8;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="1110" y="280" width="140" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- PURCHASE MODULE -->
+        <mxCell id="purchase" value="PURCHASE&#10;---&#10;id: UUID (PK)&#10;supplierId: UUID (FK)&#10;purchaseDate: date&#10;totalAmount: decimal&#10;paidAmount: decimal&#10;paymentStatus: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C2185B;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="490" y="410" width="160" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="purchase_item" value="PURCHASEITEM&#10;---&#10;id: UUID (PK)&#10;purchaseId: UUID (FK)&#10;productId: UUID (FK)&#10;quantity: int&#10;unitPrice: decimal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C2185B;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="490" y="570" width="160" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- APPOINTMENT MODULE -->
+        <mxCell id="appointment" value="APPOINTMENT&#10;---&#10;id: UUID (PK)&#10;customerId: UUID (FK)&#10;assignedStaffId: UUID (FK)&#10;appointmentDate: date&#10;appointmentTime: time&#10;status: enum&#10;paymentStatus: enum&#10;totalAmount: decimal&#10;paidAmount: decimal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCCBC;strokeColor=#D84315;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="50" y="570" width="180" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="appt_service" value="APPOINTMENTSERVICE&#10;---&#10;id: UUID (PK)&#10;appointmentId: UUID (FK)&#10;serviceId: UUID (FK)&#10;serviceNameSnapshot: string&#10;priceOverride: decimal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCCBC;strokeColor=#D84315;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="270" y="570" width="180" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="add_billing" value="ADDITIONALBILLINGITEM&#10;---&#10;id: UUID (PK)&#10;appointmentId: UUID (FK)&#10;productId: UUID (FK)&#10;description: string&#10;quantity: int&#10;unitPrice: decimal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCCBC;strokeColor=#D84315;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="710" y="570" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="payment_trans" value="PAYMENTTRANSACTION&#10;---&#10;id: UUID (PK)&#10;appointmentId: UUID (FK)&#10;amount: decimal&#10;paymentMethod: enum&#10;transactionReference: string&#10;paidAt: datetime" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCCBC;strokeColor=#D84315;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="910" y="570" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- FINANCIAL RECORDS MODULE -->
+        <mxCell id="sale_record" value="SALERECORD&#10;---&#10;id: UUID (PK)&#10;appointmentId: UUID (FK, UK)&#10;customerId: UUID (FK)&#10;saleDate: date&#10;totalAmount: decimal&#10;paidAmount: decimal&#10;paymentMethods: json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="50" y="800" width="180" height="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="supplier_pay" value="SUPPLIERPAYMENT&#10;---&#10;id: UUID (PK)&#10;supplierId: UUID (FK)&#10;purchaseId: UUID (FK)&#10;amount: decimal&#10;paymentDate: date&#10;paymentMethod: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor:#7B1FA2;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="270" y="800" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="supplier_pend" value="SUPPLIERPENDINPAYMENT&#10;---&#10;id: UUID (PK)&#10;supplierId: UUID (FK)&#10;purchaseId: UUID (FK)&#10;originalAmount: decimal&#10;remainingAmount: decimal&#10;status: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor:#7B1FA2;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="490" y="800" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cust_receivable" value="CUSTOMERRECEIVABLE&#10;---&#10;id: UUID (PK)&#10;customerId: UUID (FK)&#10;appointmentId: UUID (FK)&#10;originalAmount: decimal&#10;remainingAmount: decimal&#10;status: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor:#7B1FA2;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="710" y="800" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="credit_summary" value="CREDITSUMMARY&#10;---&#10;customerId: UUID (PK)&#10;totalCredited: decimal&#10;totalCollected: decimal&#10;currentBalance: decimal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor:#7B1FA2;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="910" y="800" width="160" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="expense" value="EXPENSE&#10;---&#10;id: UUID (PK)&#10;title: string&#10;expenseTypeId: UUID (FK)&#10;amount: decimal&#10;expenseDate: date&#10;paymentMethod: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor:#7B1FA2;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="1110" y="410" width="160" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- COURSE & STUDENT MODULE -->
+        <mxCell id="course" value="COURSE&#10;---&#10;id: UUID (PK)&#10;name: string&#10;code: string (UK)&#10;rate: decimal&#10;durationDays: int&#10;instructorStaffId: UUID (FK)&#10;level: enum&#10;status: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor:#388E3C;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="1110" y="570" width="170" height="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="student" value="STUDENT&#10;---&#10;id: UUID (PK)&#10;name: string&#10;email: string (UK)&#10;phone: string&#10;nationalId: string (UK)&#10;studentCode: string (UK)&#10;status: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor:#558B2F;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="50" y="1020" width="160" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="enrollment" value="STUDENTENROLLMENT&#10;---&#10;id: UUID (PK)&#10;studentId: UUID (FK)&#10;courseId: UUID (FK)&#10;startDate: date&#10;endDate: date&#10;totalFee: decimal&#10;discount: decimal&#10;paidAmount: decimal&#10;status: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor:#558B2F;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="270" y="1020" width="180" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="student_fee" value="STUDENTFEERECORD&#10;---&#10;id: UUID (PK)&#10;enrollmentId: UUID (FK)&#10;amount: decimal&#10;paymentDate: date&#10;paymentMethod: enum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor=#558B2F;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="490" y="1020" width="160" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONSHIPS - USER & ACCESS -->
+        <mxCell id="edge_staff_appt" edge="1" parent="1" source="staff" target="appointment">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="140" y="430" />
+            <mxPoint x="140" y="570" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="edge_staff_course" edge="1" parent="1" source="staff" target="course">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_staff_expense" edge="1" parent="1" source="staff" target="expense">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONSHIPS - CUSTOMER -->
+        <mxCell id="edge_custtype_cust" edge="1" parent="1" source="cust_type" target="customer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_cust_appt" edge="1" parent="1" source="customer" target="appointment">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_cust_receivable" edge="1" parent="1" source="customer" target="cust_receivable">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONSHIPS - SUPPLIER -->
+        <mxCell id="edge_supplier_purchase" edge="1" parent="1" source="supplier" target="purchase">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_supplier_suppay" edge="1" parent="1" source="supplier" target="supplier_pay">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_supplier_pend" edge="1" parent="1" source="supplier" target="supplier_pend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONSHIPS - CATEGORY -->
+        <mxCell id="edge_cat_service" edge="1" parent="1" source="category" target="service">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_cat_product" edge="1" parent="1" source="category" target="product">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_cat_exptype" edge="1" parent="1" source="category" target="exp_type">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONSHIPS - PURCHASE -->
+        <mxCell id="edge_purchase_item" edge="1" parent="1" source="purchase" target="purchase_item">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_product_item" edge="1" parent="1" source="product" target="purchase_item">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONSHIPS - APPOINTMENT -->
+        <mxCell id="edge_appt_service" edge="1" parent="1" source="appointment" target="appt_service">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_service_apptserv" edge="1" parent="1" source="service" target="appt_service">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_appt_addbill" edge="1" parent="1" source="appointment" target="add_billing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_product_addbill" edge="1" parent="1" source="product" target="add_billing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_appt_payment" edge="1" parent="1" source="appointment" target="payment_trans">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONSHIPS - FINANCIAL -->
+        <mxCell id="edge_appt_sale" edge="1" parent="1" source="appointment" target="sale_record">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_purchase_suppay" edge="1" parent="1" source="purchase" target="supplier_pay">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_purchase_pend" edge="1" parent="1" source="purchase" target="supplier_pend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_appt_receivable" edge="1" parent="1" source="appointment" target="cust_receivable">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_exptype_expense" edge="1" parent="1" source="exp_type" target="expense">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONSHIPS - COURSE & STUDENT -->
+        <mxCell id="edge_course_enroll" edge="1" parent="1" source="course" target="enrollment">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_student_enroll" edge="1" parent="1" source="student" target="enrollment">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_enroll_fee" edge="1" parent="1" source="enrollment" target="student_fee">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
