@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import AuthenticationsServices from "@/src/services/AuthenticationService/AuthenticationsServices";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 export default function Login() {
   const router = useRouter();
@@ -30,11 +32,7 @@ export default function Login() {
         console.error(err);
       }
     } else {
-      // Mock some users for demonstration to match the image
-      setSavedUsers([
-        { user: { email: "admin@danferes.com", roles: ["OrgAdmin"] } },
-        { user: { email: "cashier1@gmail.com", roles: ["Cashier"] } },
-      ]);
+      setSavedUsers([]);
     }
   }, []);
 
@@ -84,7 +82,7 @@ export default function Login() {
   return (
     <div className="h-screen w-full flex overflow-hidden">
       {/* LEFT SIDE (Hidden on small screens) */}
-      <div className="hidden lg:flex lg:w-7/12 relative h-full flex-col justify-center items-start">
+      <div className="hidden lg:flex lg:w-6/12 relative h-full flex-col justify-center items-start">
         {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center"
@@ -105,43 +103,59 @@ export default function Login() {
             </svg>
           </div>
 
-          {/* User Cards (Horizontal scroll replacing Swiper for simplicity without extra dependency) */}
-          <div className="flex gap-4 overflow-x-auto pb-4 w-full snap-x">
-            {savedUsers.map((item, index) => (
-              <div 
-                key={index} 
-                onClick={() => handleCardClick(item?.user?.email)}
-                className="snap-start flex-shrink-0 w-80 bg-white/10 backdrop-blur-md rounded-xl p-4 cursor-pointer hover:bg-white/20 transition duration-300 border border-white/20"
+          {/* User Cards */}
+          <div className="w-full">
+            {savedUsers.length > 0 && (
+              <Swiper
+                spaceBetween={20}
+                slidesPerView={1}
+                breakpoints={{
+                  576: { slidesPerView: 2 },
+                  768: { slidesPerView: 2 },
+                  992: { slidesPerView: 2 },
+                  1200: { slidesPerView: 2 },
+                }}
+                loop={savedUsers.length > 1}
+                className="py-3"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-xl shrink-0">
-                    {item?.user?.email?.substring(0, 2).toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h6 className="text-white font-semibold truncate text-sm">
-                      {item?.user?.email}
-                    </h6>
-                    <div className="flex justify-between items-center mt-2">
-                      <span className="bg-white text-gray-800 text-xs px-3 py-1 rounded-full font-medium">
-                        {item?.user?.roles?.[0] || "User"}
-                      </span>
-                      <button 
-                        onClick={(e) => handleDeleteUser(item?.user?.email, e)}
-                        className="text-red-400 hover:text-red-300 p-1"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                {savedUsers.map((item, index) => (
+                  <SwiperSlide key={index}>
+                    <div 
+                      onClick={() => handleCardClick(item?.user?.email)}
+                      className="bg-white/10 backdrop-blur-md rounded-xl p-4 cursor-pointer hover:bg-white/20 transition duration-300 border border-white/20 h-full"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-xl shrink-0">
+                          {item?.user?.email?.substring(0, 2).toUpperCase()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h6 className="text-white font-semibold truncate text-sm">
+                            {item?.user?.email}
+                          </h6>
+                          <div className="flex justify-between items-center mt-2">
+                            <span className="bg-white text-gray-800 text-xs px-3 py-1 rounded-full font-medium">
+                              {item?.user?.roles?.[0] || "User"}
+                            </span>
+                            <button 
+                              onClick={(e) => handleDeleteUser(item?.user?.email, e)}
+                              className="text-red-400 hover:text-red-300 p-1"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
           </div>
         </div>
       </div>
 
       {/* RIGHT SIDE (Form for Large screens, Full screen for Small screens) */}
-      <div className="w-full lg:w-5/12 h-full relative flex flex-col items-center justify-center bg-[#0f403b] lg:bg-[#0f403b]">
+      <div className="w-full lg:w-6/12 h-full pt-12 pb-20 relative flex flex-col items-center justify-center bg-[#0f403b] lg:bg-[#0f403b]">
         {/* Background Image for Mobile Only */}
         <div 
           className="lg:hidden absolute inset-0 bg-cover bg-center"
@@ -149,7 +163,7 @@ export default function Login() {
         />
         <div className="lg:hidden absolute inset-0 bg-black/60" />
 
-        <div className="relative z-10 w-full max-w-md p-8 sm:p-10 flex flex-col h-full justify-center">
+        <div className="relative z-10 w-full max-w-lg p-8 sm:p-10 flex flex-col h-full justify-center">
           <div className="text-center mb-8">
             {/* Mobile Title */}
             <div className="flex items-center justify-center gap-2 mb-4 lg:hidden">
