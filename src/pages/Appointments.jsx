@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import DataTable from "react-data-table-component";
 import {
   Calendar,
   EditIcon,
@@ -12,6 +13,9 @@ import {
 import toast from "react-hot-toast";
 import NewBookingModal from "../components/modals/NewBookingModal";
 import AddCustomerModal from "../components/modals/AddCustomerModal";
+import { Card, CardContent } from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 import AppointmentService from "../services/OrderingServices/AppointmentService";
 import {
   formatAppointmentDateTime,
@@ -21,7 +25,52 @@ import {
   startOfMonthIso,
   endOfMonthIso,
   toDateInputValue,
+  toDateTimeRangeIso,
 } from "../utils/appointmentUtils";
+
+const tableStyles = {
+  table: { style: { backgroundColor: "transparent" } },
+  headRow: {
+    style: {
+      backgroundColor: "transparent",
+      borderBottom: "1px solid var(--sand)",
+      minHeight: "44px",
+    },
+  },
+  headCells: {
+    style: {
+      fontSize: "10px",
+      fontWeight: 700,
+      letterSpacing: "0.08em",
+      textTransform: "uppercase",
+      color: "var(--muted)",
+      paddingLeft: "14px",
+      paddingRight: "14px",
+    },
+  },
+  rows: {
+    style: {
+      borderBottom: "1px solid #F2EDE8",
+      minHeight: "48px",
+      "&:hover": { backgroundColor: "#FDFAF8" },
+    },
+  },
+  cells: {
+    style: {
+      fontSize: "12.5px",
+      paddingLeft: "14px",
+      paddingRight: "14px",
+      color: "var(--text)",
+    },
+  },
+  pagination: {
+    style: {
+      borderTop: "1px solid #F2EDE8",
+      fontSize: "12px",
+      color: "var(--muted)",
+    },
+  },
+};
 
 export default function Appointments() {
   const navigate = useNavigate();
@@ -32,16 +81,20 @@ export default function Appointments() {
   const [search, setSearch] = useState("");
   const [fromDate, setFromDate] = useState(toDateInputValue(startOfMonthIso()));
   const [toDate, setToDate] = useState(toDateInputValue(endOfMonthIso()));
+  const [fromTime, setFromTime] = useState("00:00");
+  const [toTime, setToTime] = useState("23:59");
+  const [perPage, setPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchAppointments = useCallback(async () => {
     try {
       setLoading(true);
-      const from = fromDate
-        ? new Date(`${fromDate}T00:00:00`).toISOString()
-        : startOfMonthIso();
-      const to = toDate
-        ? new Date(`${toDate}T23:59:59`).toISOString()
-        : endOfMonthIso();
+      const { from, to } = toDateTimeRangeIso(
+        fromDate,
+        fromTime,
+        toDate,
+        toTime,
+      );
       const data = await AppointmentService.getList({ from, to });
       setAppointments(Array.isArray(data) ? data : data?.items || []);
     } catch (error) {
@@ -50,26 +103,32 @@ export default function Appointments() {
     } finally {
       setLoading(false);
     }
-  }, [fromDate, toDate]);
+  }, [fromDate, fromTime, toDate, toTime]);
 
   useEffect(() => {
     fetchAppointments();
   }, [fetchAppointments]);
 
-  const filtered = appointments.filter((a) => {
-    if (!search.trim()) return true;
-    const q = search.toLowerCase();
-    const treatments = (a.details || [])
-      .map((d) => d.productName)
-      .join(" ")
-      .toLowerCase();
-    return (
-      a.customerName?.toLowerCase().includes(q) ||
-      a.remarks?.toLowerCase().includes(q) ||
-      String(a.status || "").toLowerCase().includes(q) ||
-      treatments.includes(q)
-    );
-  });
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, fromDate, fromTime, toDate, toTime]);
+
+  const filtered = useMemo(() => {
+    return appointments.filter((a) => {
+      if (!search.trim()) return true;
+      const q = search.toLowerCase();
+      const treatments = (a.details || [])
+        .map((d) => d.productName)
+        .join(" ")
+        .toLowerCase();
+      return (
+        a.customerName?.toLowerCase().includes(q) ||
+        a.remarks?.toLowerCase().includes(q) ||
+        String(a.status || "").toLowerCase().includes(q) ||
+        treatments.includes(q)
+      );
+    });
+  }, [appointments, search]);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this appointment?")) return;
@@ -82,6 +141,155 @@ export default function Appointments() {
       toast.error("Failed to delete appointment");
     }
   };
+
+  const columns = [
+    {
+      name: "Customer",
+      selector: (row) => row.customerName,
+      sortable: true,
+      cell: (row) => (
+        <span style={{ fontWeight: 500 }}>{row.customerName || "—"}</span>
+      ),
+      minWidth: "140px",
+    },
+    {
+      name: "Date and Time",
+      cell: (row) => {
+        const { date, time } = formatAppointmentDateTime(row.appointmentDateTime);
+        return (
+          <span style={{ whiteSpace: "pre-line", fontSize: 12 }}>
+            {`${date}\n${time}`}
+          </span>
+        );
+      },
+      minWidth: "120px",
+    },
+    {
+      name: "Treatments / Item Details",
+      cell: (row) => {
+        const treatments = (row.details || []).map((d) => d.productName).join("\n");
+        return (
+          <span
+            style={{ whiteSpace: "pre-line", fontSize: 12, maxWidth: 220 }}
+          >
+            {treatments || "—"}
+          </span>
+        );
+      },
+      grow: 2,
+    },
+    {
+      name: "Payment",
+      cell: (row) => (
+        <span
+          className="badge-paid"
+          style={{
+            background:
+              formatPaymentStatus(row.paymentStatus).toLowerCase() === "paid"
+                ? "#E8F5E9"
+                : "#FFF3E0",
+            color: getPaymentColor(row.paymentStatus),
+          }}
+        >
+          {formatPaymentStatus(row.paymentStatus)}
+        </span>
+      ),
+      width: "100px",
+    },
+    {
+      name: "Remarks",
+      selector: (row) => row.remarks,
+      cell: (row) => (
+        <span style={{ fontSize: 12, color: "var(--muted)", maxWidth: 160 }}>
+          {row.remarks || "—"}
+        </span>
+      ),
+    },
+    {
+      name: "Items",
+      selector: (row) => row.details?.length || 0,
+      center: true,
+      width: "70px",
+    },
+    {
+      name: "Status",
+      cell: (row) => (
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            color: getStatusColor(row.status),
+          }}
+        >
+          {row.status || "—"}
+        </span>
+      ),
+      width: "100px",
+    },
+    {
+      name: "Action",
+      cell: (row) => {
+        const canComplete =
+          String(row.status).toLowerCase() === "booked";
+        return (
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              onClick={() => navigate(`/appointments/${row.id}`)}
+              title="View"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "#4CAF50",
+              }}
+            >
+              <EyeIcon size={13} />
+            </button>
+            {canComplete && (
+              <button
+                onClick={() => navigate(`/appointments/${row.id}/complete`)}
+                title="Complete"
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#3B82F6",
+                }}
+              >
+                <CheckCircle size={13} />
+              </button>
+            )}
+            <button
+              onClick={() => navigate(`/appointments/${row.id}/edit`)}
+              title="Edit"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "var(--warm)",
+              }}
+            >
+              <EditIcon size={13} />
+            </button>
+            <button
+              onClick={() => handleDelete(row.id)}
+              title="Delete"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "#E05C5C",
+              }}
+            >
+              <Trash2Icon size={13} />
+            </button>
+          </div>
+        );
+      },
+      width: "120px",
+      right: true,
+    },
+  ];
 
   return (
     <div style={{ padding: "0 0 32px" }}>
@@ -109,86 +317,52 @@ export default function Appointments() {
               flexWrap: "wrap",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                border: "1px solid var(--sand)",
-                borderRadius: 8,
-                padding: "5px 10px",
-                background: "white",
-                fontSize: 12,
-              }}
-            >
-              <Calendar size={13} color="var(--muted)" />
-              <input
+            <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-brand-sand bg-white px-2.5 py-1.5 text-xs">
+              <Calendar size={13} className="text-stone-400 shrink-0" />
+              <Input
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                style={{
-                  border: "none",
-                  outline: "none",
-                  fontSize: 12,
-                  fontFamily: "DM Sans, sans-serif",
-                  color: "var(--dark)",
-                }}
+                className="h-7 w-auto border-0 p-0 text-xs shadow-none focus-visible:ring-0"
               />
-              <span style={{ color: "var(--muted)" }}>to</span>
-              <input
+              <Input
+                type="time"
+                value={fromTime}
+                onChange={(e) => setFromTime(e.target.value)}
+                className="h-7 w-auto border-0 p-0 text-xs shadow-none focus-visible:ring-0"
+              />
+              <span className="text-stone-400 text-[11px]">to</span>
+              <Input
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
-                style={{
-                  border: "none",
-                  outline: "none",
-                  fontSize: 12,
-                  fontFamily: "DM Sans, sans-serif",
-                  color: "var(--dark)",
-                }}
+                className="h-7 w-auto border-0 p-0 text-xs shadow-none focus-visible:ring-0"
+              />
+              <Input
+                type="time"
+                value={toTime}
+                onChange={(e) => setToTime(e.target.value)}
+                className="h-7 w-auto border-0 p-0 text-xs shadow-none focus-visible:ring-0"
               />
             </div>
-            <button
-              className="btn-primary"
-              onClick={() => setShowBooking(true)}
-            >
+            <Button onClick={() => setShowBooking(true)}>
               <Plus size={13} /> Add Appointment
-            </button>
-            <button
-              className="btn-outline"
-              onClick={() => setShowCustomer(true)}
-            >
+            </Button>
+            <Button variant="outline" onClick={() => setShowCustomer(true)}>
               <Plus size={13} /> Add Customer
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
-      <div style={{ padding: "16px 28px 0" }}>
-        <div
-          style={{
-            background: "white",
-            border: "1px solid var(--sand)",
-            borderRadius: 12,
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              padding: "14px 16px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderBottom: "1px solid #F2EDE8",
-              flexWrap: "wrap",
-              gap: 10,
-            }}
-          >
-            <span style={{ fontSize: 12, color: "var(--muted)" }}>
+      <div className="px-4 md:px-7 pt-4">
+        <Card className="overflow-hidden [&_.rdt_TableRow:hover]:!bg-[#FDFAF8]">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-[#F2EDE8] px-4 py-3.5">
+            <span className="text-xs text-stone-500">
               Showing {filtered.length} appointment
               {filtered.length !== 1 ? "s" : ""}
             </span>
-            <div className="search-bar" style={{ minWidth: 220 }}>
+            <div className="search-bar min-w-[220px]">
               <Search size={13} color="var(--muted)" />
               <input
                 placeholder="Search customer, service, remarks..."
@@ -198,190 +372,39 @@ export default function Appointments() {
             </div>
           </div>
 
-          <div style={{ overflowX: "auto" }}>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  {[
-                    "Customer",
-                    "Date and Time",
-                    "Treatments / Item Details",
-                    "Payment",
-                    "Remarks",
-                    "Items",
-                    "Status",
-                    "Action",
-                  ].map((h) => (
-                    <th key={h}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td
-                      colSpan={8}
-                      style={{
-                        textAlign: "center",
-                        padding: 20,
-                        color: "var(--muted)",
-                      }}
-                    >
-                      Loading appointments...
-                    </td>
-                  </tr>
-                ) : filtered.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={8}
-                      style={{
-                        textAlign: "center",
-                        padding: 20,
-                        color: "var(--muted)",
-                      }}
-                    >
-                      No appointments found.
-                    </td>
-                  </tr>
-                ) : (
-                  filtered.map((appointment) => {
-                    const { date, time } = formatAppointmentDateTime(
-                      appointment.appointmentDateTime,
-                    );
-                    const treatments = (appointment.details || [])
-                      .map((d) => d.productName)
-                      .join("\n");
-                    const canComplete =
-                      String(appointment.status).toLowerCase() === "booked";
-
-                    return (
-                      <tr key={appointment.id}>
-                        <td style={{ fontWeight: 500 }}>
-                          {appointment.customerName || "—"}
-                        </td>
-                        <td
-                          style={{ whiteSpace: "pre-line", fontSize: 12 }}
-                        >{`${date}\n${time}`}</td>
-                        <td
-                          style={{
-                            whiteSpace: "pre-line",
-                            fontSize: 12,
-                            maxWidth: 220,
-                          }}
-                        >
-                          {treatments || "—"}
-                        </td>
-                        <td>
-                          <span
-                            className="badge-paid"
-                            style={{
-                              background:
-                                formatPaymentStatus(
-                                  appointment.paymentStatus,
-                                ).toLowerCase() === "paid"
-                                  ? "#E8F5E9"
-                                  : "#FFF3E0",
-                              color: getPaymentColor(appointment.paymentStatus),
-                            }}
-                          >
-                            {formatPaymentStatus(appointment.paymentStatus)}
-                          </span>
-                        </td>
-                        <td
-                          style={{
-                            fontSize: 12,
-                            color: "var(--muted)",
-                            maxWidth: 160,
-                          }}
-                        >
-                          {appointment.remarks || "—"}
-                        </td>
-                        <td style={{ textAlign: "center" }}>
-                          {appointment.details?.length || 0}
-                        </td>
-                        <td>
-                          <span
-                            style={{
-                              fontSize: 11,
-                              fontWeight: 700,
-                              color: getStatusColor(appointment.status),
-                            }}
-                          >
-                            {appointment.status || "—"}
-                          </span>
-                        </td>
-                        <td>
-                          <div style={{ display: "flex", gap: 8 }}>
-                            <button
-                              onClick={() =>
-                                navigate(`/appointments/${appointment.id}`)
-                              }
-                              title="View"
-                              style={{
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                color: "#4CAF50",
-                              }}
-                            >
-                              <EyeIcon size={13} />
-                            </button>
-                            {canComplete && (
-                              <button
-                                onClick={() =>
-                                  navigate(
-                                    `/appointments/${appointment.id}/complete`,
-                                  )
-                                }
-                                title="Complete"
-                                style={{
-                                  background: "none",
-                                  border: "none",
-                                  cursor: "pointer",
-                                  color: "#3B82F6",
-                                }}
-                              >
-                                <CheckCircle size={13} />
-                              </button>
-                            )}
-                            <button
-                              onClick={() =>
-                                navigate(
-                                  `/appointments/${appointment.id}/edit`,
-                                )
-                              }
-                              title="Edit"
-                              style={{
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                color: "var(--warm)",
-                              }}
-                            >
-                              <EditIcon size={13} />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(appointment.id)}
-                              title="Delete"
-                              style={{
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                color: "#E05C5C",
-                              }}
-                            >
-                              <Trash2Icon size={13} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+          <CardContent className="p-0">
+          <DataTable
+            columns={columns}
+            data={filtered}
+            progressPending={loading}
+            pagination
+            paginationServer={false}
+            paginationTotalRows={filtered.length}
+            paginationPerPage={perPage}
+            paginationDefaultPage={currentPage}
+            onChangePage={setCurrentPage}
+            onChangeRowsPerPage={(newPerPage, page) => {
+              setPerPage(newPerPage);
+              setCurrentPage(page);
+            }}
+            paginationRowsPerPageOptions={[10, 20, 50]}
+            highlightOnHover
+            responsive
+            customStyles={tableStyles}
+            noDataComponent={
+              <div
+                style={{
+                  padding: 24,
+                  color: "var(--muted)",
+                  fontSize: 14,
+                }}
+              >
+                No appointments found.
+              </div>
+            }
+          />
+          </CardContent>
+        </Card>
       </div>
 
       {showBooking && (

@@ -60,3 +60,19 @@ export const toTimeInputValue = (iso) => {
   if (Number.isNaN(d.getTime())) return "";
   return d.toTimeString().slice(0, 5);
 };
+
+export const toDateTimeRangeIso = (fromDate, fromTime, toDate, toTime) => {
+  const from = fromDate
+    ? new Date(`${fromDate}T${fromTime || "00:00"}:00`)
+    : new Date();
+  const to = toDate
+    ? new Date(`${toDate}T${toTime || "23:59"}:59`)
+    : new Date();
+  return { from: from.toISOString(), to: to.toISOString() };
+};
+
+export const appointmentItemTotal = (appointment) =>
+  (appointment?.details || []).reduce(
+    (sum, d) => sum + (Number(d.quantity) || 0) * (Number(d.unitPrice) || 0),
+    0,
+  );

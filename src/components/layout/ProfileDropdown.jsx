@@ -48,9 +48,9 @@ const ProfileDropdown = ({ toggleKotOpen, isSuperAdmin, isPrivilegedUser, usesPo
         className="flex items-center gap-2 hover:bg-gray-100 p-1.5 rounded-md transition-colors"
       >
         <img src={avatarUrl} alt="Avatar" className="w-8 h-8 rounded-full object-cover" />
-        <span className="text-sm font-medium hidden sm:block">
+        {/* <span className="text-sm font-medium hidden sm:block">
           {auth?.name || auth?.userName || "Admin"}
-        </span>
+        </span> */}
         <ChevronDown size={14} className="text-gray-500" />
       </button>
 

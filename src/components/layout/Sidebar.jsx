@@ -15,6 +15,7 @@ import {
   Tag,
   Package,
   CreditCard,
+  Receipt,
 } from "lucide-react";
 
 const NAV = [
@@ -23,6 +24,7 @@ const NAV = [
     items: [
       { path: "/", label: "Dashboard", icon: LayoutDashboard },
       { path: "/appointments", label: "Appointments", icon: Calendar },
+      { path: "/billing", label: "Billing", icon: Receipt },
       { path: "/service-menu", label: "Service Menu", icon: UtensilsCrossed },
     ],
   },

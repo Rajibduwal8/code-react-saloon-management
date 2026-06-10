@@ -27,6 +27,7 @@ import CustomerMetaField from "../pages/CustomerMetaField/CustomerMetaField";
 import Category from "../pages/Category/Category";
 import Units from "../pages/Units/Units";
 import PaymentType from "../pages/PaymentType/PaymentType";
+import Billing from "../pages/Billing/Billing";
 
 /**
  * Route configuration object
@@ -44,6 +45,12 @@ export const routes = [
     label: "Appointments",
     component: Appointments,
     icon: "Calendar",
+  },
+  {
+    path: "/billing",
+    label: "Billing",
+    component: Billing,
+    icon: "Receipt",
   },
   {
     path: "/service-menu",
