@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit, Trash2Icon } from "lucide-react";
-import { getClientById, deleteClient } from "../services/clientService";
+import CustomerService from "../services/OrderingServices/CustomerService";
+import DeleteModal from "../components/common/DeleteModal";
+import AddCustomerModal from "../components/modals/AddCustomerModal";
 
 export default function ClientDetail() {
   const { id } = useParams();
@@ -9,283 +11,185 @@ export default function ClientDetail() {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const fetchClient = async () => {
+    try {
+      const data = await CustomerService.getById(id);
+      setClient(data);
+    } catch (error) {
+      console.error("Error fetching client:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchClient = async () => {
-      try {
-        const data = await getClientById(id);
-        setClient(data);
-      } catch (error) {
-        console.error("Error fetching client:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchClient();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this client?")) {
-      try {
-        await deleteClient(id);
-        navigate("/clients");
-      } catch (error) {
-        console.error("Error deleting client:", error);
-      }
+    try {
+      await CustomerService.delete(id);
+      navigate("/clients");
+    } catch (error) {
+      console.error("Error deleting client:", error);
     }
   };
 
   if (loading) {
     return (
-      <div style={{ padding: "40px 28px", textAlign: "center" }}>
-        <div style={{ fontSize: 14, color: "var(--muted)" }}>Loading...</div>
+      <div className="flex items-center justify-center p-12">
+        <p className="text-gray-500">Loading details...</p>
       </div>
     );
   }
 
   if (!client) {
     return (
-      <div style={{ padding: "40px 28px" }}>
+      <div className="p-8">
         <button
-          className="btn-outline"
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-6 font-medium"
           onClick={() => navigate("/clients")}
-          style={{ marginBottom: 20 }}
         >
-          <ArrowLeft size={13} /> Back to Clients
+          <ArrowLeft size={16} /> Back to Clients
         </button>
-        <div style={{ textAlign: "center", color: "var(--muted)" }}>
-          Client not found
-        </div>
+        <div className="text-center text-gray-500">Client not found</div>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "0 0 32px" }}>
-      <div className="page-header">
-        <div
-          style={{
-            display: "flex",
-            gap: 12,
-            alignItems: "center",
-            marginBottom: 20,
-          }}
-        >
-          <button className="btn-outline" onClick={() => navigate("/clients")}>
-            <ArrowLeft size={13} /> Back
+    <div className="p-4 md:p-8 max-w-5xl mx-auto">
+      <div className="flex flex-col md:flex-row gap-4 justify-between items-start mb-8">
+        <div className="flex items-center gap-4">
+          <button 
+            className="p-2 border rounded-md hover:bg-gray-50 transition-colors" 
+            onClick={() => navigate("/clients")}
+            title="Back"
+          >
+            <ArrowLeft size={16} />
           </button>
           <div>
-            <div className="page-title">
+            <h1 className="text-2xl font-bold text-gray-800">
               {client.firstName} {client.lastName}
-            </div>
-            <div className="page-subtitle">Client ID: {client.id}</div>
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">Client ID: {client.id} • Registered: {new Date(client.createdDate).toLocaleDateString()}</p>
           </div>
         </div>
-      </div>
-
-      <div style={{ padding: "16px 28px" }}>
-        <div
-          style={{
-            background: "white",
-            border: "1px solid var(--sand)",
-            borderRadius: 12,
-            padding: "24px",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 32,
-              marginBottom: 32,
-            }}
+        <div className="flex gap-3">
+          <button
+            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+            onClick={() => setShowEditModal(true)}
           >
-            <div>
-              <h3
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "var(--muted)",
-                  textTransform: "uppercase",
-                  marginBottom: 12,
-                }}
-              >
-                Personal Information
-              </h3>
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: 12 }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: 10,
-                      color: "var(--muted)",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Full Name
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: "var(--dark)",
-                      marginTop: 4,
-                    }}
-                  >
-                    {client.firstName} {client.lastName}
-                  </div>
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontSize: 10,
-                      color: "var(--muted)",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    National ID
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: "var(--dark)",
-                      marginTop: 4,
-                    }}
-                  >
-                    {client.nationalId}
-                  </div>
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontSize: 10,
-                      color: "var(--muted)",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Phone
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: "var(--dark)",
-                      marginTop: 4,
-                    }}
-                  >
-                    {client.phone}
-                  </div>
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontSize: 10,
-                      color: "var(--muted)",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Email
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: "var(--dark)",
-                      marginTop: 4,
-                    }}
-                  >
-                    {client.email}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h3
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "var(--muted)",
-                  textTransform: "uppercase",
-                  marginBottom: 12,
-                }}
-              >
-                Dermatological Information
-              </h3>
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: 12 }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: 10,
-                      color: "var(--muted)",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Skin Type
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: "var(--dark)",
-                      marginTop: 4,
-                    }}
-                  >
-                    {client.skin}
-                  </div>
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontSize: 10,
-                      color: "var(--muted)",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Registered Date
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: "var(--dark)",
-                      marginTop: 4,
-                    }}
-                  >
-                    {client.registeredDate}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: "flex", gap: 12 }}>
-            <button
-              className="btn-outline"
-              onClick={() => navigate(`/clients/${id}/edit`)}
-              style={{ display: "flex", alignItems: "center", gap: 8 }}
-            >
-              <Edit size={13} /> Edit
-            </button>
-            <button
-              className="btn-outline"
-              onClick={handleDelete}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                color: "#E05C5C",
-                borderColor: "#E05C5C",
-              }}
-            >
-              <Trash2Icon size={13} /> Delete
-            </button>
-          </div>
+            <Edit size={16} /> Edit
+          </button>
+          <button
+            className="flex items-center gap-2 px-4 py-2 border border-red-200 text-red-600 bg-red-50 rounded-md text-sm font-medium hover:bg-red-100"
+            onClick={() => setShowDeleteModal(true)}
+          >
+            <Trash2Icon size={16} /> Delete
+          </button>
         </div>
       </div>
+
+      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Personal Info */}
+          <div>
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 border-b pb-2">
+              Personal Information
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Full Name</p>
+                <p className="font-medium text-gray-800">{client.firstName} {client.lastName}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Email</p>
+                <p className="font-medium text-gray-800">{client.email || "-"}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Phone</p>
+                <p className="font-medium text-gray-800">{client.phoneNo} {client.phoneNo2 ? ` / ${client.phoneNo2}` : ""}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Address</p>
+                <p className="font-medium text-gray-800">{client.address || "-"}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Account Info */}
+          <div>
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 border-b pb-2">
+              Account Information
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Customer Type</p>
+                <div className="mt-1">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-700 text-sm rounded-full font-medium">
+                    {client.customerTypeName}
+                  </span>
+                  {client.customerTypeDiscount > 0 && (
+                    <span className="ml-2 text-xs text-green-600 font-medium">
+                      ({client.customerTypeDiscount}% Discount)
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Total Orders</p>
+                <p className="font-medium text-gray-800">{client.totalOrders}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Total Spent</p>
+                <p className="font-medium text-gray-800">Rs. {client.totalOrderAmount?.toLocaleString() || "0"}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Last Order Date</p>
+                <p className="font-medium text-gray-800">
+                  {client.lastOrderDate ? new Date(client.lastOrderDate).toLocaleDateString() : "Never"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Meta Fields (Dynamic) */}
+          {client.customerMetaValues && client.customerMetaValues.length > 0 && (
+            <div className="md:col-span-2 mt-4">
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 border-b pb-2">
+                Additional Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {client.customerMetaValues.map((meta, idx) => (
+                  <div key={idx}>
+                    <p className="text-xs text-gray-500 uppercase">{meta.metaFieldCode}</p>
+                    <p className="font-medium text-gray-800">{meta.value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showEditModal && (
+        <AddCustomerModal 
+          clientData={client} 
+          onClose={() => setShowEditModal(false)} 
+          onSuccess={fetchClient} 
+        />
+      )}
+
+      <DeleteModal 
+        show={showDeleteModal}
+        onCloseClick={() => setShowDeleteModal(false)}
+        onDeleteClick={handleDelete}
+      />
     </div>
   );
 }

@@ -5,7 +5,7 @@
 
 import Dashboard from "../pages/Dashboard";
 import Appointments from "../pages/Appointments";
-import ServiceMenu from "../pages/ServiceMenu";
+import ServiceMenu from "../pages/ServiceMenu/ServiceMenu";
 import Courses from "../pages/Courses";
 import Client from "../pages/Client";
 import Students from "../pages/Students";
@@ -21,6 +21,10 @@ import AppointmentDetail from "../pages/AppointmentDetail";
 import AppointmentEdit from "../pages/AppointmentEdit";
 import CourseDetail from "../pages/CourseDetail";
 import CourseEdit from "../pages/CourseEdit";
+import CustomerType from "../pages/CustomerType/CustomerType";
+import CustomerMetaField from "../pages/CustomerMetaField/CustomerMetaField";
+import Category from "../pages/Category/Category";
+import Units from "../pages/Units/Units";
 
 /**
  * Route configuration object
@@ -61,6 +65,30 @@ export const routes = [
     path: "/clients/:id",
     component: ClientDetail,
     private: true,
+  },
+  {
+    path: "/customer-types",
+    label: "Client Type",
+    component: CustomerType,
+    icon: "Users",
+  },
+  {
+    path: "/customer-metafields",
+    label: "Client Metafields",
+    component: CustomerMetaField,
+    icon: "List",
+  },
+  {
+    path: "/categories",
+    label: "Categories",
+    component: Category,
+    icon: "Tag",
+  },
+  {
+    path: "/units",
+    label: "Units",
+    component: Units,
+    icon: "Package",
   },
   {
     path: "/clients/:id/edit",

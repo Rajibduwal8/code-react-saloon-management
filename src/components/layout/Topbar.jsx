@@ -1,5 +1,6 @@
 import React from 'react'
 import { Search, Menu, Plus, GraduationCap } from 'lucide-react'
+import ProfileDropdown from './ProfileDropdown'
 
 export default function Topbar({ collapsed, setCollapsed, onQuickBooking, onEnrollStudent }) {
   const now = new Date()
@@ -31,10 +32,7 @@ export default function Topbar({ collapsed, setCollapsed, onQuickBooking, onEnro
           <GraduationCap size={13} />
           Enroll Student
         </button>
-        {/* Logo */}
-        <div style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', marginLeft: 4 }}>
-          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #E8773A, #C9A882, #8B5E3C)', borderRadius: '50%' }} />
-        </div>
+        <ProfileDropdown />
       </div>
     </div>
   )

@@ -22,19 +22,32 @@ export const clientValidationSchema = yup.object({
     .string()
     .required("Last name is required")
     .min(2, "Last name must be at least 2 characters"),
-  nationalId: yup
-    .string()
-    .required("National ID is required")
-    .matches(nationalIdRegex, "National ID must be valid"),
-  phone: yup
-    .string()
-    .required("Phone number is required")
-    .matches(phoneRegex, "Phone number must be 10 digits"),
   email: yup
     .string()
     .required("Email is required")
     .matches(emailRegex, "Email must be valid"),
-  skin: yup.string().required("Skin type is required"),
+  address: yup.string().required("Address is required"),
+  phoneNo: yup
+    .string()
+    .required("Phone number is required")
+    .matches(phoneRegex, "Phone number must be 10 digits"),
+  phoneNo2: yup
+    .string()
+    .nullable()
+    .notRequired()
+    .test("is-valid-phone", "Secondary phone must be 10 digits", (value) => 
+      !value || phoneRegex.test(value)
+    ),
+  customerTypeId: yup
+    .number()
+    .required("Customer Type is required")
+    .min(1, "Please select a Customer Type"),
+  customerMetaValues: yup.array().of(
+    yup.object().shape({
+      metaFieldCode: yup.string().required(),
+      value: yup.string().required("Value is required"),
+    })
+  ).nullable().notRequired()
 });
 
 /**

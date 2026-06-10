@@ -11,6 +11,9 @@ import {
   BarChart3,
   Settings,
   ChevronLeft,
+  List,
+  Tag,
+  Package,
 } from "lucide-react";
 
 /**
@@ -32,6 +35,15 @@ const NAV = [
       { path: "/courses", label: "Courses & Enrol", icon: GraduationCap },
       { path: "/clients", label: "Clients", icon: UserCheck },
       { path: "/students", label: "Students", icon: Users },
+      { path: "/customer-types", label: "Client Type", icon: Users },
+      { path: "/customer-metafields", label: "Client Metafields", icon: List },
+    ],
+  },
+  {
+    section: "Inventory",
+    items: [
+      { path: "/categories", label: "Categories", icon: Tag },
+      { path: "/units", label: "Units", icon: Package },
     ],
   },
   {

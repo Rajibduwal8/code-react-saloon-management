@@ -5,6 +5,7 @@ import {
   Route,
   useLocation,
   useNavigate,
+  Navigate,
 } from "react-router-dom";
 import Sidebar from "./components/layout/Sidebar";
 import Topbar from "./components/layout/Topbar";
@@ -95,13 +96,41 @@ import AppointmentEdit from "./pages/AppointmentEdit";
 import CourseDetail from "./pages/CourseDetail";
 import CourseEdit from "./pages/CourseEdit";
 
+// Import auth pages and toast
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import { Toaster } from "react-hot-toast";
+
+/**
+ * Protected Route Wrapper
+ */
+function ProtectedRoute({ children }) {
+  const user = localStorage.getItem("user");
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
 /**
  * Main App component with Router
  */
 export default function App() {
   return (
     <BrowserRouter>
-      <AppLayout />
+      <Toaster position="top-right" />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }

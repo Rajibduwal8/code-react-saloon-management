@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import AddCustomerModal from "../components/modals/AddCustomerModal";
-import { getClientById } from "../services/clientService";
+import CustomerService from "../services/OrderingServices/CustomerService";
 
 export default function ClientEdit() {
   const { id } = useParams();
@@ -13,7 +13,7 @@ export default function ClientEdit() {
   useEffect(() => {
     const fetchClient = async () => {
       try {
-        const data = await getClientById(id);
+        const data = await CustomerService.getById(id);
         setClient(data);
       } catch (error) {
         console.error("Error fetching client:", error);
