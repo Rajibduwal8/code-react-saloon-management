@@ -1,39 +1,52 @@
-import React from 'react'
-import { Search, Menu, Plus, GraduationCap } from 'lucide-react'
-import ProfileDropdown from './ProfileDropdown'
+import React from "react";
+import { Search, Menu, Plus, GraduationCap } from "lucide-react";
+import ProfileDropdown from "./ProfileDropdown";
 
-export default function Topbar({ collapsed, setCollapsed, onQuickBooking, onEnrollStudent }) {
-  const now = new Date()
-  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-
+export default function Topbar({
+  collapsed,
+  setCollapsed,
+  onOpenMobileSidebar,
+  onQuickBooking,
+  onEnrollStudent,
+}) {
   return (
     <div className="topbar">
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div className="topbar-left">
+        <button
+          type="button"
+          className="topbar-menu-btn topbar-menu-btn--mobile"
+          onClick={onOpenMobileSidebar}
+          aria-label="Open navigation menu"
+        >
+          <Menu size={18} />
+        </button>
         {collapsed && (
           <button
+            type="button"
+            className="topbar-menu-btn topbar-menu-btn--desktop"
             onClick={() => setCollapsed(false)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', display: 'flex' }}
+            aria-label="Expand sidebar"
           >
             <Menu size={18} />
           </button>
         )}
-        <div className="search-bar">
+        <div className="search-bar topbar-search">
           <Search size={14} color="var(--muted)" />
           <input placeholder="Search database across entities..." />
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div className="topbar-actions">
         <button className="btn-primary" onClick={onQuickBooking}>
           <Plus size={13} />
-          Quick Booking
+          <span className="btn-text">Quick Booking</span>
         </button>
         <button className="btn-outline" onClick={onEnrollStudent}>
           <GraduationCap size={13} />
-          Enroll Student
+          <span className="btn-text">Enroll Student</span>
         </button>
         <ProfileDropdown />
       </div>
     </div>
-  )
+  );
 }

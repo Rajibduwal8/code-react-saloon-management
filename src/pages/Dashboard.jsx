@@ -49,7 +49,7 @@ export default function Dashboard() {
     <div style={{ padding: '0 0 32px' }}>
       {/* Header */}
       <div className="page-header" style={{ paddingBottom: 20 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div className="page-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
           <div>
             <div className="page-title">Cultivating Studio Wellness</div>
             <div className="page-subtitle">Hello Ankit, welcome back. Here is your boutique performance index today.</div>
@@ -61,9 +61,9 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div style={{ padding: '0 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="page-body" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         {/* Top stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+        <div className="grid-cols-4">
           <StatCard label="Today Sales" value="NPR 150,000" sub="↑ 14.5% more then month" icon={DollarSign} iconColor="var(--warm)" />
           <StatCard label="Appointments Today" value="5" sub="2 Clients, 1 Students" icon={Calendar} iconColor="var(--warm)" />
           <StatCard label="Completed Treatments" value="2" sub="33% rate on 3 total" icon={CheckSquare} iconColor="var(--warm)" />
@@ -71,7 +71,7 @@ export default function Dashboard() {
         </div>
 
         {/* Chart + Timeline */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 16 }}>
+        <div className="grid-chart-timeline">
           {/* Weekly chart */}
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -126,7 +126,7 @@ export default function Dashboard() {
         </div>
 
         {/* Bottom stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-cols-3">
           <StatCard label="Total Revenue" value="NPR 150,000" sub="↑ 14.5% more then month" icon={DollarSign} iconColor="var(--warm)" />
           <StatCard label="Top Services" value="2" sub="66% completion rate" icon={CheckSquare} iconColor="var(--warm)" />
           <StatCard label="Total Services" value="5" sub="4 new bookings within last 2 hrs" icon={Calendar} iconColor="var(--orange)" />

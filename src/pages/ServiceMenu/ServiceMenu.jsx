@@ -153,13 +153,8 @@ export default function ServiceMenu() {
 
       {/* Summary Stats */}
       <div
-        style={{
-          padding: "0 28px",
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 16,
-          marginBottom: 20,
-        }}
+        className="page-body grid-cols-3"
+        style={{ marginBottom: 20 }}
       >
         {/* Total */}
         <div
@@ -327,14 +322,7 @@ export default function ServiceMenu() {
           No products found
         </div>
       ) : (
-        <div
-          style={{
-            padding: "0 28px",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 16,
-          }}
-        >
+        <div className="page-body grid-cols-3">
           {products.map((s) => (
             <div
               key={s.id}

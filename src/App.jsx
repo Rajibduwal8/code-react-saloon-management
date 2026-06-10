@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -20,27 +20,50 @@ function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [showBooking, setShowBooking] = useState(false);
   const [showEnroll, setShowEnroll] = useState(false);
 
-  // Get the current route to determine active page
   const sidebarRoutes = getSidebarRoutes();
   const currentRoute = sidebarRoutes.find(
     (route) => route.path === location.pathname,
   );
   const activePage = currentRoute?.path || "/";
 
+  useEffect(() => {
+    setMobileSidebarOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 768) setMobileSidebarOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   const handleNavigation = (path) => {
     navigate(path);
+    setMobileSidebarOpen(false);
   };
 
   return (
     <div className="layout">
+      {mobileSidebarOpen && (
+        <button
+          type="button"
+          className="sidebar-backdrop visible"
+          aria-label="Close navigation menu"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
       <Sidebar
         activePage={activePage}
         setActivePage={handleNavigation}
         collapsed={sidebarCollapsed}
         setCollapsed={setSidebarCollapsed}
+        mobileOpen={mobileSidebarOpen}
+        onMobileClose={() => setMobileSidebarOpen(false)}
         routes={sidebarRoutes}
       />
 
@@ -48,6 +71,7 @@ function AppLayout() {
         <Topbar
           collapsed={sidebarCollapsed}
           setCollapsed={setSidebarCollapsed}
+          onOpenMobileSidebar={() => setMobileSidebarOpen(true)}
           onQuickBooking={() => setShowBooking(true)}
           onEnrollStudent={() => setShowEnroll(true)}
         />
@@ -69,14 +93,20 @@ function AppLayout() {
           <Route path="/students/:id/edit" element={<StudentEdit />} />
           <Route path="/staff/:id" element={<StaffDetail />} />
           <Route path="/staff/:id/edit" element={<StaffEdit />} />
-          <Route path="/appointments/:id" element={<AppointmentDetail />} />
+          <Route path="/appointments/:id/complete" element={<AppointmentComplete />} />
           <Route path="/appointments/:id/edit" element={<AppointmentEdit />} />
+          <Route path="/appointments/:id" element={<AppointmentDetail />} />
           <Route path="/courses/:id" element={<CourseDetail />} />
           <Route path="/courses/:id/edit" element={<CourseEdit />} />
         </Routes>
       </div>
 
-      {showBooking && <NewBookingModal onClose={() => setShowBooking(false)} />}
+      {showBooking && (
+        <NewBookingModal
+          onClose={() => setShowBooking(false)}
+          onSuccess={() => setShowBooking(false)}
+        />
+      )}
       {showEnroll && (
         <EnrollStudentModal onClose={() => setShowEnroll(false)} />
       )}
@@ -93,6 +123,7 @@ import StaffDetail from "./pages/StaffDetail";
 import StaffEdit from "./pages/StaffEdit";
 import AppointmentDetail from "./pages/AppointmentDetail";
 import AppointmentEdit from "./pages/AppointmentEdit";
+import AppointmentComplete from "./pages/AppointmentComplete";
 import CourseDetail from "./pages/CourseDetail";
 import CourseEdit from "./pages/CourseEdit";
 

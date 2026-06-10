@@ -19,12 +19,14 @@ import StaffDetail from "../pages/StaffDetail";
 import StaffEdit from "../pages/StaffEdit";
 import AppointmentDetail from "../pages/AppointmentDetail";
 import AppointmentEdit from "../pages/AppointmentEdit";
+import AppointmentComplete from "../pages/AppointmentComplete";
 import CourseDetail from "../pages/CourseDetail";
 import CourseEdit from "../pages/CourseEdit";
 import CustomerType from "../pages/CustomerType/CustomerType";
 import CustomerMetaField from "../pages/CustomerMetaField/CustomerMetaField";
 import Category from "../pages/Category/Category";
 import Units from "../pages/Units/Units";
+import PaymentType from "../pages/PaymentType/PaymentType";
 
 /**
  * Route configuration object
@@ -91,6 +93,12 @@ export const routes = [
     icon: "Package",
   },
   {
+    path: "/payment-types",
+    label: "Payment Types",
+    component: PaymentType,
+    icon: "CreditCard",
+  },
+  {
     path: "/clients/:id/edit",
     component: ClientEdit,
     private: true,
@@ -135,6 +143,11 @@ export const routes = [
   {
     path: "/appointments/:id/edit",
     component: AppointmentEdit,
+    private: true,
+  },
+  {
+    path: "/appointments/:id/complete",
+    component: AppointmentComplete,
     private: true,
   },
   {
